@@ -1,0 +1,58 @@
+#
+# .gitignore file
+#
+# This file is set to ignore standard configuration files, backup files, 
+# build files, and other local, OS-specific files that do not belong in a 
+# shared repository
+#
+# Last updated:
+# BRK - 2016-fall
+#
+
+# Editor backup files
+*~
+*.bak
+
+# Class Files #
+*.class
+
+# Package Files #
+*.jar
+*.war
+*.ear
+
+# NetBeans specific, updated for 8.1
+nbproject/private
+build/
+nbbuild/
+dist/
+nbdist/
+nbactions.xml
+.nb-gradle/
+
+# Eclipse configuration files
+# NOTE: If you want to use the Git plugin for Eclipse, then 
+# do NOT exclude .classpath and .project!
+.settings/
+.metadata
+.classpath
+.project
+.loadpath
+local.properties
+
+# Default Eclipse output directory
+bin/
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Trashes
+.Icon?
+ehthumbs.db
+Thumbs.db
+
+# Misc
+*.swp
+*.tmp
+tmp/
