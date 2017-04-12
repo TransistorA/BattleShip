@@ -122,10 +122,36 @@ public class Ship {
     }
 
     public void rotateCW() {
+        // Get the value of the x-coordinate of the pivot point.
+        int xPivot = this.shipLoc.get(0)[0];
 
+        // Get the value of the y-coordinate of the pivot point.
+        int yPivot = this.shipLoc.get(0)[1];
+
+        // Loop over the rest of the values.
+        for (int i = 1; i < this.shipLoc.size(); i++) {
+            // Hold the new point.
+            int[] newLoc = {xPivot, yPivot + i};
+
+            // Replace the old point in the ship location.
+            this.shipLoc.set(i, newLoc);
+        }
     }
 
     public void rotateCCW() {
 
+        // Get the value of the x-coordinate of the pivot point.
+        int xPivot = this.shipLoc.get(this.shipLoc.size() - 1)[0];
+
+        // Get the value of the y-coordinate of the pivot point.
+        int yPivot = this.shipLoc.get(this.shipLoc.size() - 1)[1];
+
+        // Loop over the rest of the values.
+        for (int i = 1; i < this.shipLoc.size(); i++) {
+            // Hold the new point.
+            int[] newLoc = {xPivot
+
+            }
+
+        }
     }
-}
