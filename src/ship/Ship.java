@@ -121,37 +121,209 @@ public class Ship {
         return isSunk;
     }
 
+    /**
+     * Rotates the position of the ship clockwise.
+     *
+     * @author Joseph DiPalma
+     */
     public void rotateCW() {
-        // Get the value of the x-coordinate of the pivot point.
-        int xPivot = this.shipLoc.get(0)[0];
+        // Find the x and y coordinates of the pivot point.
+        int pivotX = this.shipLoc.get(0)[0];
+        int pivotY = this.shipLoc.get(0)[1];
+        int[] pivot = this.shipLoc.get(0);
 
-        // Get the value of the y-coordinate of the pivot point.
-        int yPivot = this.shipLoc.get(0)[1];
+        // I'll assume the x and y bounds are 10 for now.
+        // This means the x and y coordinates will range from 0 -> 9.
+        int xBound = 10;
+        int yBound = 10;
 
-        // Loop over the rest of the values.
-        for (int i = 1; i < this.shipLoc.size(); i++) {
-            // Hold the new point.
-            int[] newLoc = {xPivot, yPivot + i};
+        // Temporary ArrayList to hold the updated values.
+        ArrayList<int[]> tempLoc = new ArrayList<int[]>();
 
-            // Replace the old point in the ship location.
-            this.shipLoc.set(i, newLoc);
-        }
-    }
+        // The ship is horizontal.
+        if (this.orientation == Orientation.HORIZONTAL) {
+            // Add the pivot to the location.
+            tempLoc.add(pivot);
 
-    public void rotateCCW() {
+            // Loop over all of the values except the pivot.
+            for (int i = 1; i < this.shipLoc.size(); i++) {
+                // Hold the new point.
+                int[] newLoc = {pivotX, pivotY + i};
 
-        // Get the value of the x-coordinate of the pivot point.
-        int xPivot = this.shipLoc.get(this.shipLoc.size() - 1)[0];
-
-        // Get the value of the y-coordinate of the pivot point.
-        int yPivot = this.shipLoc.get(this.shipLoc.size() - 1)[1];
-
-        // Loop over the rest of the values.
-        for (int i = 1; i < this.shipLoc.size(); i++) {
-            // Hold the new point.
-            int[] newLoc = {xPivot
-
+                // Add the new point to the ship location.
+                tempLoc.add(newLoc);
             }
 
+            // Make sure I haven't gone past the bounds.
+            // Check the last value in order to determine if I went over the bounds.
+            int[] lastPair = tempLoc.get(tempLoc.size() - 1);
+
+            if (lastPair[1] >= yBound) {
+                // Find the difference between the bounds.
+                int diff = lastPair[1] - yBound + 1;
+
+                // Loop over the ship location to fix the bounds.
+                for (int j = 0; j < tempLoc.size(); j++) {
+                    // Get the old value of the y coordinate.
+                    int oldY = tempLoc.get(j)[1];
+
+                    // Get the last ordered pair and update it.
+                    int[] tempPair = tempLoc.get(j);
+                    tempPair[1] = oldY - diff;
+
+                    // Update the location of the ship.
+                    tempLoc.set(j, tempPair);
+                }
+            }
+
+            // Change the orientation of the ship.
+            this.orientation = Orientation.VERTICAL;
         }
+
+        // The ship is vertical.
+        else {
+
+            // Loop over all of the values .
+            for (int i = 0; i < this.shipLoc.size(); i++) {
+                // Get the old y coordinate.
+                int oldY = this.shipLoc.get(i)[1];
+
+                // Hold the new point.
+                int[] newLoc = {oldY, pivotY};
+
+                // Add the new point to the ship location.
+                tempLoc.add(newLoc);
+            }
+
+            // Make sure I haven't gone past the bounds.
+            // Check the first value in order to determine if I went over the bounds.
+            int[] firstPair = tempLoc.get(0);
+
+            if (firstPair[0] < 0) {
+                // Find the difference between the bounds.
+                int diff = -firstPair[0];
+
+                // Loop over the ship location to fix the bounds.
+                for (int j = 0; j < tempLoc.size(); j++) {
+                    // Get the old value of the x coordinate.
+                    int oldX = tempLoc.get(j)[0];
+
+                    // Get the old ordered pair and update it.
+                    int[] tempPair = tempLoc.get(j);
+                    tempPair[0] = oldX + diff;
+
+                    // Update the location of the ship.
+                    tempLoc.set(j, tempPair);
+                }
+            }
+
+            // Change the orientation of the ship.
+            this.orientation = Orientation.HORIZONTAL;
+        }
+        // Update the ship's position.
+        this.shipLoc = tempLoc;
     }
+
+    /**
+     * Rotates the position of the ship counterclockwise.
+     *
+     * @author Joseph DiPalma
+     */
+    public void rotateCCW() {
+        // Find the x and y coordinates of the pivot point.
+        int pivotX = this.shipLoc.get(this.shipLoc.size() - 1)[0];
+        int pivotY = this.shipLoc.get(this.shipLoc.size() - 1)[1];
+        int[] pivot = this.shipLoc.get(this.shipLoc.size() - 1);
+
+        // I'll assume the x and y bounds are 10 for now.
+        // This means the x and y coordinates will range from 0 -> 9.
+        int xBound = 10;
+        int yBound = 10;
+
+        // Temporary ArrayList to hold the updated values.
+        ArrayList<int[]> tempLoc = new ArrayList<int[]>();
+
+        // The ship is horizontal.
+        if (this.orientation == Orientation.HORIZONTAL) {
+            // Add the pivot to the location.
+            tempLoc.add(pivot);
+
+            // Loop over all of the values.
+            for (int i = 0; i < this.shipLoc.size() - 1; i++) {
+                // Hold the new point.
+                int[] newLoc = {pivotX, pivotY + (i - 2)};
+
+                // Add the new point to the ship location.
+                tempLoc.add(newLoc);
+            }
+
+            // Make sure I haven't gone past the bounds.
+            // Check the last value to make sure I didn't go over the bounds.
+            int[] lastPair = tempLoc.get(tempLoc.size() - 1);
+
+            if (lastPair[1] > yBound) {
+                // Find the difference between the bounds.
+                int diff = lastPair[1] - yBound + 1;
+
+                // Loop over the ship location to fix the bounds.
+                for (int j = 0; j < tempLoc.size(); j++) {
+                    // Get the old value of the y coordinate.
+                    int oldY = tempLoc.get(j)[1];
+
+                    // Get the last ordered pair and update it.
+                    int[] tempPair = tempLoc.get(j);
+                    tempPair[1] = oldY - diff;
+
+                    // Update the location of the ship.
+                    tempLoc.set(j, tempPair);
+                }
+            }
+
+            // Change the orientation of the ship.
+            this.orientation = Orientation.VERTICAL;
+        }
+
+        // The ship is vertical.
+        else {
+            // Loop over all of the values except the pivot.
+            for (int i = 0; i < this.shipLoc.size() - 1; i++) {
+                // Hold the new point.
+                int[] newLoc = {pivotX - (i + 1), pivotY};
+
+                // Add the new point to the ship location.
+                tempLoc.add(newLoc);
+            }
+
+            // Add the pivot to the location.
+            tempLoc.add(pivot);
+
+            // Make sure I haven't gone past the bounds.
+            // Check the first value to make sure I didn't go over the bounds.
+            int[] firstPair = tempLoc.get(0);
+
+            if (firstPair[0] < 0) {
+                // Find the difference between the bounds.
+                int diff = -firstPair[0];
+
+                // Loop over the ship location to fix the bounds.
+                for (int j = 0; j < tempLoc.size(); j++) {
+                    // Get the old value of the x coordinate.
+                    int oldX = tempLoc.get(j)[0];
+
+                    // Get the old ordered pair and update it.
+                    int[] tempPair = tempLoc.get(j);
+                    tempPair[0] = oldX + diff;
+
+                    // Update the location of the ship.
+                    tempLoc.set(j, tempPair);
+                }
+            }
+
+            // Change the orientation of the ship.
+            this.orientation = Orientation.HORIZONTAL;
+        }
+
+        // Update the ship's position.
+        this.shipLoc = tempLoc;
+    }
+}
