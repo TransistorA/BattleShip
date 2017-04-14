@@ -24,27 +24,6 @@ import javafx.geometry.Orientation;
  *
  * @author Joseph DiPalma
  */
-enum ShipType {
-    CARRIER(5), BATTLESHIP(4), CRUISER(3), SUBMARINE(3), DESTROYER(2);
-
-    private int size;
-
-    /**
-     * Initialize the enumerated type ShipType.
-     *
-     * @author Joseph DiPalma
-     *
-     * @param size the size of the ship represented by the ShipType
-     */
-    ShipType(int size) {
-        this.size = size;
-    }
-
-    public int getSize() {
-        return size;
-    }
-}
-
 /**
  * Ship in Battleship game.
  *
@@ -84,6 +63,13 @@ public class Ship {
         this.isSunk = false;
         this.shipHits = new int[this.shipType.getSize()];
         this.shipLoc = shipLoc;
+        this.numHits = 0;
+    }
+
+    public Ship(ShipType type) {
+        this.shipType = shipType;
+        this.isSunk = false;
+        this.shipHits = new int[this.shipType.getSize()];
         this.numHits = 0;
     }
 
@@ -128,4 +114,26 @@ public class Ship {
     public void rotateCCW() {
 
     }
+
+    /**
+     * set the position of the ship with default horizontal position
+     *
+     * @param startLoc - an order pair [x,y]
+     */
+    public void setLocation(int[] startLoc) {
+
+    }
+
+    public boolean isIsSunk() {
+        return isSunk;
+    }
+
+    public int[] getShipHits() {
+        return shipHits;
+    }
+
+    public ArrayList<int[]> getShipLoc() {
+        return shipLoc;
+    }
+
 }
