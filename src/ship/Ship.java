@@ -121,6 +121,18 @@ public class Ship {
         return isSunk;
     }
 
+    public ArrayList<int[]> getShipLoc() {
+        return shipLoc;
+    }
+
+    public Orientation getOrientation() {
+        return orientation;
+    }
+
+    public void setOrientation(Orientation orientation) {
+        this.orientation = orientation;
+    }
+
     /**
      * Rotates the position of the ship clockwise.
      *
@@ -184,12 +196,12 @@ public class Ship {
         else {
 
             // Loop over all of the values .
-            for (int i = 0; i < this.shipLoc.size(); i++) {
-                // Get the old y coordinate.
-                int oldY = this.shipLoc.get(i)[1];
+            for (int i = this.shipLoc.size() - 1; i >= 0; i--) {
+//                // Get the old y coordinate.
+//                int oldY = this.shipLoc.get(i)[1];
 
                 // Hold the new point.
-                int[] newLoc = {oldY, pivotY};
+                int[] newLoc = {pivotX - i, pivotY};
 
                 // Add the new point to the ship location.
                 tempLoc.add(newLoc);
@@ -251,7 +263,7 @@ public class Ship {
             // Loop over all of the values.
             for (int i = 0; i < this.shipLoc.size() - 1; i++) {
                 // Hold the new point.
-                int[] newLoc = {pivotX, pivotY + (i - 2)};
+                int[] newLoc = {pivotX, pivotY + (i + 1)};
 
                 // Add the new point to the ship location.
                 tempLoc.add(newLoc);
@@ -286,9 +298,9 @@ public class Ship {
         // The ship is vertical.
         else {
             // Loop over all of the values except the pivot.
-            for (int i = 0; i < this.shipLoc.size() - 1; i++) {
+            for (int i = this.shipLoc.size() - 1; i > 0; i--) {
                 // Hold the new point.
-                int[] newLoc = {pivotX - (i + 1), pivotY};
+                int[] newLoc = {pivotX - i, pivotY};
 
                 // Add the new point to the ship location.
                 tempLoc.add(newLoc);
