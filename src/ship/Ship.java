@@ -20,11 +20,6 @@ import java.util.Arrays;
 import javafx.geometry.Orientation;
 
 /**
- * Enumerated type representing the type of the ship.
- *
- * @author Joseph DiPalma
- */
-/**
  * Ship in Battleship game.
  *
  * @author Joseph DiPalma
@@ -341,9 +336,4 @@ public class Ship {
     public int[] getShipHits() {
         return shipHits;
     }
-
-    public ArrayList<int[]> getShipLoc() {
-        return shipLoc;
-    }
-
 }
