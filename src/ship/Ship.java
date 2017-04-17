@@ -62,7 +62,7 @@ public class Ship {
     }
 
     public Ship(ShipType type) {
-        this.shipType = shipType;
+        this.shipType = type;
         this.isSunk = false;
         this.shipHits = new int[this.shipType.getSize()];
         this.numHits = 0;

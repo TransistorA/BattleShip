@@ -26,11 +26,15 @@ import javafx.stage.Stage;
 public class Main extends Application {
 
     private View theView;
+    private Model theModel;
+    private Controller theCtrl;
 
     @Override
     public void init() throws Exception {
         super.init();
-        this.theView = new View(null);
+        this.theModel = new Model();
+        this.theView = new View(theModel);
+        this.theCtrl = new Controller(theModel, theView);
     }
 
     @Override
@@ -39,7 +43,7 @@ public class Main extends Application {
         Scene scene = new Scene(this.theView.getRoot());
 
         primaryStage.setScene(scene);
-        //primaryStage.sizeToScene();
+        primaryStage.sizeToScene();
         primaryStage.show();
     }
 
