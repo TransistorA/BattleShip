@@ -74,6 +74,8 @@ public class View {
         root.setPrefHeight(1500);
         root.setPrefWidth(1500);
 
+        grids = new GridPane();
+
         myBoard = new GridPane();
         // Create the board.
         for (int i = 0; i < 10; i++) {
@@ -104,6 +106,7 @@ public class View {
         // Switch color on my grid when clicked.
         for (int i = 0; i < this.board.length; i++) {
             for (Rectangle r : this.board[i]) {
+
                 r.setOnMouseClicked(new EventHandler<MouseEvent>() {
                     @Override
                     public void handle(MouseEvent mouseevent) {
@@ -113,6 +116,8 @@ public class View {
                         else if (r.getFill() == Paint.valueOf("RED")) {
                             r.setFill(Paint.valueOf("BLUE"));
                         }
+                        int col = grids.getColumnIndex(r);
+                        System.out.println(col);
                     }
                 });
             }
@@ -178,7 +183,6 @@ public class View {
         root.setRight(rightPane);
 
         // Add both boards to the center pane.
-        grids = new GridPane();
         grids.setMargin(opponentBoard, new Insets(5.0));
         grids.setMargin(myBoard, new Insets(5.0));
         grids.add(opponentBoard, 0, 0);
