@@ -78,13 +78,11 @@ public class View {
         // Create the board.
         for (int i = 0; i < 10; i++) {
             for (int j = 0; j < 10; j++) {
-                Rectangle r1 = new Rectangle(100 + 30 * j, 100 + 30 * i, 20, 20);
+                Rectangle r1 = new Rectangle(100 + 30 * j, 100 + 30 * i, 50, 50);
                 r1.setFill(Paint.valueOf("BLUE"));
                 r1.setStroke(Paint.valueOf("BLACK"));
                 board[i][j] = r1;
-                myBoard.add(r1, i, j);
-                //myBoard.setConstraints(r1, i, j);
-                //myBoard.getChildren().add(r1);
+                myBoard.add(r1, i + 50, j + 50);
             }
         }
 
@@ -92,12 +90,11 @@ public class View {
         // Create the enemy board.
         for (int i = 0; i < 10; i++) {
             for (int j = 0; j < 10; j++) {
-                Rectangle r1 = new Rectangle(500 + 30 * j, 100 + 30 * i, 20, 20);
+                Rectangle r1 = new Rectangle(500 + 30 * j, 100 + 30 * i, 50, 50);
                 r1.setFill(Paint.valueOf("BLUE"));
                 r1.setStroke(Paint.valueOf("BLACK"));
                 enemyBoard[i][j] = r1;
-                opponentBoard.add(r1, i, j);
-                //opponentBoard.getChildren().add(r1);
+                opponentBoard.add(r1, i + 50, j + 50);
             }
         }
 
@@ -135,17 +132,6 @@ public class View {
             }
         }
 
-//        // Loop to create the rows and columns.
-//        for (int r = 1; r < 11; r++) {
-//            //System.out.println("r is: " + (((double) r) * 10.0));
-//            for (int c = 1; c < 11; c++) {
-//                grid.getChildren().add(new Rectangle(100 + 30 * c,
-//                                                     100 + 30 * r, 20.0,
-//                                                     20.0));
-//
-//                //System.out.println("c is: " + (((double) c) * 10.0));
-//            }
-//        }
         // Add the pane for the user to select the ship.
         rightPane = new FlowPane();
         rightPane.getChildren().add(new Label("Ship options: "));
@@ -179,13 +165,12 @@ public class View {
 
         // Add both boards to the center pane.
         grids = new GridPane();
+        grids.setVgap(5);
+        grids.setHgap(5);
         grids.setMargin(opponentBoard, new Insets(5.0));
         grids.setMargin(myBoard, new Insets(5.0));
-        grids.add(opponentBoard, 0, 0);
-        grids.add(myBoard, 20, 0);
-
-        //grids.setLeft(opponentBoard);
-        //grids.setRight(myBoard);
+        grids.add(opponentBoard, 50, 50);
+        grids.add(myBoard, 70, 50);
         grids.setPrefSize(1000, 1000);
 
         root.setCenter(grids);

@@ -20,8 +20,9 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 
 /**
+ * Main method for the project.
  *
- * @author jrd028
+ * @author Joseph DiPalma
  */
 public class Main extends Application {
 
