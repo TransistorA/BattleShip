@@ -15,8 +15,12 @@
  */
 package GUI;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.ToggleGroup;
@@ -28,6 +32,7 @@ import javafx.scene.paint.Paint;
 import javafx.scene.shape.Rectangle;
 import ship.Ship;
 import ship.ShipType;
+import static ship.ShipType.CRUISER;
 
 /**
  * View part of the MVC design pattern.
@@ -59,6 +64,8 @@ public class View {
     private RadioButton destroyerBtn;
     ToggleGroup shipGroup;
 
+    private Button createShipBtn;
+
     /**
      * Constructor for the View class.
      *
@@ -80,11 +87,11 @@ public class View {
         // Create the board.
         for (int i = 0; i < 10; i++) {
             for (int j = 0; j < 10; j++) {
-                Rectangle r1 = new Rectangle(100 + 30 * j, 100 + 30 * i, 50, 50);
+                Rectangle r1 = new Rectangle(100 + 30 * j, 100 + 30 * i, 30, 30);
                 r1.setFill(Paint.valueOf("BLUE"));
                 r1.setStroke(Paint.valueOf("BLACK"));
                 board[i][j] = r1;
-                myBoard.add(r1, i + 50, j + 50);
+                myBoard.add(r1, i, j);
             }
         }
 
@@ -92,11 +99,11 @@ public class View {
         // Create the enemy board.
         for (int i = 0; i < 10; i++) {
             for (int j = 0; j < 10; j++) {
-                Rectangle r1 = new Rectangle(500 + 30 * j, 100 + 30 * i, 50, 50);
+                Rectangle r1 = new Rectangle(500 + 30 * j, 100 + 30 * i, 30, 30);
                 r1.setFill(Paint.valueOf("BLUE"));
                 r1.setStroke(Paint.valueOf("BLACK"));
                 enemyBoard[i][j] = r1;
-                opponentBoard.add(r1, i + 50, j + 50);
+                opponentBoard.add(r1, i, j);
             }
         }
 
@@ -113,8 +120,15 @@ public class View {
                         else if (r.getFill() == Paint.valueOf("RED")) {
                             r.setFill(Paint.valueOf("BLUE"));
                         }
-                        int col = grids.getColumnIndex(r);
-                        System.out.println(col);
+
+                        int[][] temp = {{2, 2}, {3, 2}, {4, 2}};
+                        ArrayList<int[]> shipLoc = new ArrayList<int[]>(
+                                Arrays.asList(temp));
+                        Ship ship = new Ship(shipLoc, CRUISER);
+
+                        int col = myBoard.getColumnIndex(r);
+                        int row = myBoard.getRowIndex(r);
+                        System.out.println(row);
                     }
                 });
             }
@@ -132,10 +146,22 @@ public class View {
                         else if (r.getFill() == Paint.valueOf("RED")) {
                             r.setFill(Paint.valueOf("BLUE"));
                         }
+                        int col = opponentBoard.getColumnIndex(r);
+                        int row = opponentBoard.getRowIndex(r);
+                        System.out.println(row);
                     }
                 });
             }
         }
+
+        // Create the ship on the board after selecting the type
+        createShipBtn = new Button("Create Ship!");
+        createShipBtn.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+
+            }
+        });
 
         // Add the pane for the user to select the ship.
         rightPane = new FlowPane();
@@ -160,11 +186,8 @@ public class View {
         destroyerBtn.setUserData(new Ship(ShipType.DESTROYER));
 
         carrierBtn.setSelected(true);
-        rightPane.getChildren().add(carrierBtn);
-        rightPane.getChildren().add(battleshipBtn);
-        rightPane.getChildren().add(cruiserBtn);
-        rightPane.getChildren().add(submarineBtn);
-        rightPane.getChildren().add(destroyerBtn);
+        rightPane.getChildren().addAll(carrierBtn, battleshipBtn, cruiserBtn,
+                                       submarineBtn, destroyerBtn, createShipBtn);
 
         root.setRight(rightPane);
 
@@ -203,12 +226,20 @@ public class View {
         return destroyerBtn;
     }
 
+    public Button getCreateShipBtn() {
+        return createShipBtn;
+    }
+
     public Rectangle[][] getBoard() {
         return board;
     }
 
     public Rectangle[][] getEnemyBoard() {
         return enemyBoard;
+    }
+
+    public void buildShip(Ship ship) {
+
     }
 
 }
