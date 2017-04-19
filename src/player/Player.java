@@ -54,7 +54,7 @@ public class Player {
     public Player() {
         this.initIndex = 0;
         //init constants
-        this.shipConfig = new int[]{5, 4, 3, 3, 2};
+        this.shipConfig = new int[]{1, 1, 1, 1, 1};
         this.totalShips = 17;
         //Carrier, Battleship, Cruiser, Submarine, Destroyer
         this.types = new ShipType[]{ShipType.CARRIER, ShipType.BATTLESHIP, ShipType.CRUISER, ShipType.SUBMARINE, ShipType.DESTROYER};
