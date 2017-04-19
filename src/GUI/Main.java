@@ -40,7 +40,7 @@ public class Main extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
         // Now, set up the scene, and connect it to the stage!
-        Scene scene = new Scene(this.theView.getRoot());
+        Scene scene = new Scene(this.theView.getRoot(), 500, 500);
 
         primaryStage.setScene(scene);
         primaryStage.sizeToScene();
