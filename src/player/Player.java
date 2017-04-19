@@ -29,6 +29,8 @@ public class Player {
 
     //array of ships
     private ArrayList<Ship> myShips;
+    //index for initalize ship, internal use only
+    private int initIndex;
 
     //ship type configuration
     private final int[] shipConfig;
@@ -50,6 +52,7 @@ public class Player {
 
     //setup the configuration of the player ships
     public Player() {
+        this.initIndex = 0;
         //init constants
         this.shipConfig = new int[]{5, 4, 3, 3, 2};
         this.totalShips = 17;
@@ -70,26 +73,37 @@ public class Player {
 
     }
 
-    public void attack(int[] loc) {
-        this.updateMyBoard(loc);
-        this.updateEnemyBoard(loc);
-        this.updateShips(loc);
+    public void initShipLocations(int[] loc) {
+        if (this.initIndex < this.myShips.size()) {
+            this.myShips.get(initIndex).setLocation(loc);
+        }
+        this.initIndex += 1;
+    }
 
+    public boolean attack(int[] loc, Player enemy) {
+        //update self tracking board
+        this.updateSelf(loc);
+        //update ships for enemy
+        return enemy.updateShips(loc);
     }
 
     public void defend(int[] loc) {
-
+        if (this.updateShips(loc)) {
+            this.updateSelf(loc);
+        }
     }
 
     public int getShipRemain() {
         return shipRemain;
     }
 
-    private void updateShips(int[] loc) {
+    private boolean updateShips(int[] loc) {
+        boolean isHit = false;
         for (Ship s : myShips) {
             for (int i = 0; i < s.getShipLoc().size(); i++) {
                 if (loc == s.getShipLoc().get(i)) {
                     s.getShipHits()[i] = 1;
+                    isHit = true;
                 }
             }
             if (s.isIsSunk()) {
@@ -97,14 +111,14 @@ public class Player {
 
             }
         }
+        return isHit;
 
     }
 
-    private void updateMyBoard(int[] loc) {
-        this.myBoard.updateBoard(loc);
-    }
-
-    private void updateEnemyBoard(int[] loc) {
+//    private void updateEnemy(int[] loc) {
+//        this.myBoard.updateBoard(loc);
+//    }
+    private void updateSelf(int[] loc) {
         this.targetBoard.updateBoard(loc);
     }
 

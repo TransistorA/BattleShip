@@ -326,7 +326,11 @@ public class Ship {
      * @param startLoc - an order pair [x,y]
      */
     public void setLocation(int[] startLoc) {
-
+        this.shipLoc.add(startLoc);
+        for (int i = 0; i < this.shipType.getSize() - 1; i++) {
+            int[] t = {startLoc[0] + 1, startLoc[1]};
+            this.shipLoc.add(Arrays.copyOf(t, t.length));
+        }
     }
 
     public boolean isIsSunk() {
