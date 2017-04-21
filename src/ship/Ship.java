@@ -102,6 +102,10 @@ public class Ship {
         return isSunk;
     }
 
+    public ShipType getShipType() {
+        return shipType;
+    }
+
     public ArrayList<int[]> getShipLoc() {
         return shipLoc;
     }

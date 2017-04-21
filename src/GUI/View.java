@@ -15,10 +15,13 @@
  */
 package GUI;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ToggleButton;
@@ -33,6 +36,11 @@ import javafx.scene.paint.Paint;
 import javafx.scene.shape.Rectangle;
 import ship.Ship;
 import ship.ShipType;
+import static ship.ShipType.BATTLESHIP;
+import static ship.ShipType.CARRIER;
+import static ship.ShipType.CRUISER;
+import static ship.ShipType.DESTROYER;
+import static ship.ShipType.SUBMARINE;
 
 /**
  * View part of the MVC design pattern.
@@ -121,7 +129,7 @@ public class View {
                 r1.setFill(Paint.valueOf("GREY"));
                 r1.setStroke(Paint.valueOf("BLACK"));
                 board[i][j] = r1;
-                myBoard.add(r1, i + 50, j + 50);
+                myBoard.add(r1, i, j);
             }
         }
 
@@ -134,7 +142,7 @@ public class View {
                 r1.setFill(Paint.valueOf("GREY"));
                 r1.setStroke(Paint.valueOf("BLACK"));
                 enemyBoard[i][j] = r1;
-                opponentBoard.add(r1, i + 50, j + 50);
+                opponentBoard.add(r1, i, j);
             }
         }
 
@@ -188,51 +196,154 @@ public class View {
         submarineBtn.setToggleGroup(shipGroup);
         destroyerBtn.setToggleGroup(shipGroup);
 
-        // Switch color on my grid when clicked.
+        // Create or rotate ship, or destroy ship when clicking on ship area
         for (int i = 0; i < this.board.length; i++) {
             for (Rectangle r : this.board[i]) {
 
                 r.setOnMouseClicked(new EventHandler<MouseEvent>() {
                     @Override
                     public void handle(MouseEvent mouseevent) {
-                        if (r.getFill() == Paint.valueOf("GREY")) {
-                            // Find the ship that was clicked.
+
+                        if (r.getFill() != Paint.valueOf("GREY")) {
+                            r.setFill(Paint.valueOf("GREY"));
+                        }
+
+                        else {
+                            int col = myBoard.getColumnIndex(r);
+                            int row = myBoard.getRowIndex(r);
+
+                            int[][] temp = null;
+
                             if (carrierBtn.isSelected()) {
-                                r.setFill(Paint.valueOf(
-                                        ShipType.CARRIER.getColor()));
+                                temp = new int[5][2];
+                                for (int i = 0; i < 5; i++) {
+                                    int[] tempArray = {col + i, row};
+                                    temp[i] = tempArray;
+                                }
                             }
 
                             else if (battleshipBtn.isSelected()) {
-                                r.setFill(Paint.valueOf(
-                                        ShipType.BATTLESHIP.getColor()));
+                                temp = new int[4][2];
+                                for (int i = 0; i < 4; i++) {
+                                    int[] tempArray = {col + i, row};
+                                    temp[i] = tempArray;
+                                }
                             }
 
                             else if (cruiserBtn.isSelected()) {
-                                r.setFill(Paint.valueOf(
-                                        ShipType.CRUISER.getColor()));
+                                temp = new int[3][2];
+                                for (int i = 0; i < 3; i++) {
+                                    int[] tempArray = {col + i, row};
+                                    temp[i] = tempArray;
+                                }
                             }
 
                             else if (submarineBtn.isSelected()) {
-                                r.setFill(Paint.valueOf(
-                                        ShipType.SUBMARINE.getColor()));
+                                temp = new int[3][2];
+                                for (int i = 0; i < 3; i++) {
+                                    int[] tempArray = {col + i, row};
+                                    temp[i] = tempArray;
+                                }
                             }
 
                             else if (destroyerBtn.isSelected()) {
-                                r.setFill(Paint.valueOf(
-                                        ShipType.DESTROYER.getColor()));
+                                temp = new int[2][2];
+                                for (int i = 0; i < 2; i++) {
+                                    int[] tempArray = {col + i, row};
+                                    temp[i] = tempArray;
+                                }
+                            }
+
+                            ArrayList<int[]> shipLoc = new ArrayList<int[]>(
+                                    Arrays.asList(temp));
+
+                            Ship ship = null;
+
+                            if (carrierBtn.isSelected()) {
+                                ship = new Ship(shipLoc, CARRIER);
+                            }
+
+                            else if (battleshipBtn.isSelected()) {
+                                ship = new Ship(shipLoc, BATTLESHIP);
+                            }
+
+                            else if (cruiserBtn.isSelected()) {
+                                ship = new Ship(shipLoc, CRUISER);
+                            }
+
+                            else if (submarineBtn.isSelected()) {
+                                ship = new Ship(shipLoc, SUBMARINE);
+                            }
+
+                            else if (destroyerBtn.isSelected()) {
+                                ship = new Ship(shipLoc, DESTROYER);
+                            }
+
+                            try {
+                                buildShipMy(ship);
+                            } catch (Exception e) {
+                                // System.out.println(e.toString());
+                                Alert alert = new Alert(
+                                        Alert.AlertType.ERROR);
+                                alert.setTitle("Out of range!");
+                                alert.setHeaderText(
+                                        "Incorrect input specified!");
+                                alert.setContentText("Out of range!");
+                                alert.show();
                             }
 
                         }
-                        else if (r.getFill() != Paint.valueOf("GREY")) {
-                            r.setFill(Paint.valueOf("GREY"));
-                        }
-                        int col = grids.getColumnIndex(r);
-                        System.out.println(col);
+
+                        //System.out.println(row);
                     }
                 });
             }
         }
 
+//        // Switch color on my grid when clicked.
+//        for (int i = 0; i < this.board.length; i++) {
+//            for (Rectangle r : this.board[i]) {
+//
+//                r.setOnMouseClicked(new EventHandler<MouseEvent>() {
+//                    @Override
+//                    public void handle(MouseEvent mouseevent) {
+//                        if (r.getFill() == Paint.valueOf("GREY")) {
+//                            // Find the ship that was clicked.
+//                            if (carrierBtn.isSelected()) {
+//                                r.setFill(Paint.valueOf(
+//                                        ShipType.CARRIER.getColor()));
+//                            }
+//
+//                            else if (battleshipBtn.isSelected()) {
+//                                r.setFill(Paint.valueOf(
+//                                        ShipType.BATTLESHIP.getColor()));
+//                            }
+//
+//                            else if (cruiserBtn.isSelected()) {
+//                                r.setFill(Paint.valueOf(
+//                                        ShipType.CRUISER.getColor()));
+//                            }
+//
+//                            else if (submarineBtn.isSelected()) {
+//                                r.setFill(Paint.valueOf(
+//                                        ShipType.SUBMARINE.getColor()));
+//                            }
+//
+//                            else if (destroyerBtn.isSelected()) {
+//                                r.setFill(Paint.valueOf(
+//                                        ShipType.DESTROYER.getColor()));
+//                            }
+//
+//                        }
+//                        else if (r.getFill() != Paint.valueOf("GREY")) {
+//                            r.setFill(Paint.valueOf("GREY"));
+//                        }
+//                        int col = grids.getColumnIndex(r);
+//                        System.out.println(col);
+//                    }
+//                });
+//            }
+//        }
         // Set the ship type.
         carrierBtn.setUserData(new Ship(ShipType.CARRIER));
         battleshipBtn.setUserData(new Ship(ShipType.BATTLESHIP));
@@ -291,6 +402,15 @@ public class View {
 
     public Rectangle[][] getEnemyBoard() {
         return enemyBoard;
+    }
+
+    public void buildShipMy(Ship ship) {
+        for (int[] position : ship.getShipLoc()) {
+            Rectangle r = board[position[0]][position[1]];
+            myBoard.getChildren().remove(r);
+            r.setFill(Paint.valueOf(ship.getShipType().getColor()));
+            myBoard.add(r, position[0], position[1]);
+        }
     }
 
 }
