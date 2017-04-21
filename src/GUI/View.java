@@ -193,12 +193,12 @@ public class View {
                             }
 
                             else if (shipVertical.isSelected()) {
-                                int[][] temp = {{col, row}, {col, row + 1}, {col, row + 2}};
+                                int[][] temp = {{col, row}, {col + 1, row}, {col + 1, row}};
                                 ArrayList<int[]> shipLoc = new ArrayList<int[]>(
                                         Arrays.asList(temp));
                                 Ship ship = new Ship(shipLoc, CRUISER);
                                 try {
-                                    buildShipEnemy(ship);
+                                    rotateEnemy(ship);
                                 } catch (Exception e) {
                                     Alert alert = new Alert(
                                             Alert.AlertType.ERROR);
@@ -306,6 +306,11 @@ public class View {
         }
     }
 
+    public void rotateMy(Ship ship) {
+        ship.rotateCCW();
+        buildShipMy(ship);
+    }
+
     public void buildShipEnemy(Ship ship) {
         for (int[] position : ship.getShipLoc()) {
             Rectangle r = enemyBoard[position[0]][position[1]];
@@ -313,6 +318,11 @@ public class View {
             r.setFill(Paint.valueOf("RED"));
             opponentBoard.add(r, position[0], position[1]);
         }
+    }
+
+    public void rotateEnemy(Ship ship) {
+        ship.rotateCCW();
+        buildShipEnemy(ship);
     }
 
 }
