@@ -17,10 +17,9 @@ package GUI;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
-import javafx.scene.control.Button;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.ToggleGroup;
@@ -57,14 +56,9 @@ public class View {
     private FlowPane rightPane;
 
     // Set up the radio buttons for the ships.
-    private RadioButton carrierBtn;
-    private RadioButton battleshipBtn;
-    private RadioButton cruiserBtn;
-    private RadioButton submarineBtn;
-    private RadioButton destroyerBtn;
-    ToggleGroup shipGroup;
-
-    private Button createShipBtn;
+    private RadioButton carrierBtn, battleshipBtn, cruiserBtn, submarineBtn, destroyerBtn;
+    private RadioButton shipHorizontal, shipVertical;
+    ToggleGroup shipGroup, shipDirection;
 
     /**
      * Constructor for the View class.
@@ -107,28 +101,60 @@ public class View {
             }
         }
 
-        // Switch color on my grid when clicked.
+        // Create or rotate ship, or destroy ship when clicking on ship area
         for (int i = 0; i < this.board.length; i++) {
             for (Rectangle r : this.board[i]) {
 
                 r.setOnMouseClicked(new EventHandler<MouseEvent>() {
                     @Override
                     public void handle(MouseEvent mouseevent) {
-                        if (r.getFill() == Paint.valueOf("BLUE")) {
-                            r.setFill(Paint.valueOf("RED"));
-                        }
-                        else if (r.getFill() == Paint.valueOf("RED")) {
+
+                        if (r.getFill() == Paint.valueOf("RED")) {
                             r.setFill(Paint.valueOf("BLUE"));
                         }
 
-                        int[][] temp = {{2, 2}, {3, 2}, {4, 2}};
-                        ArrayList<int[]> shipLoc = new ArrayList<int[]>(
-                                Arrays.asList(temp));
-                        Ship ship = new Ship(shipLoc, CRUISER);
+                        else {
+                            int col = myBoard.getColumnIndex(r);
+                            int row = myBoard.getRowIndex(r);
 
-                        int col = myBoard.getColumnIndex(r);
-                        int row = myBoard.getRowIndex(r);
-                        System.out.println(row);
+                            if (shipHorizontal.isSelected()) {
+                                int[][] temp = {{col, row}, {col + 1, row}, {col + 2, row}};
+                                ArrayList<int[]> shipLoc = new ArrayList<int[]>(
+                                        Arrays.asList(temp));
+                                Ship ship = new Ship(shipLoc, CRUISER);
+                                try {
+                                    buildShipMy(ship);
+                                } catch (Exception e) {
+                                    Alert alert = new Alert(
+                                            Alert.AlertType.ERROR);
+                                    alert.setTitle("Out of range!");
+                                    alert.setHeaderText(
+                                            "Incorrect input specified!");
+                                    alert.setContentText("Out of range!");
+                                    alert.show();
+                                }
+                            }
+
+                            else if (shipVertical.isSelected()) {
+                                int[][] temp = {{col, row}, {col, row + 1}, {col, row + 2}};
+                                ArrayList<int[]> shipLoc = new ArrayList<int[]>(
+                                        Arrays.asList(temp));
+                                Ship ship = new Ship(shipLoc, CRUISER);
+                                try {
+                                    buildShipMy(ship);
+                                } catch (Exception e) {
+                                    Alert alert = new Alert(
+                                            Alert.AlertType.ERROR);
+                                    alert.setTitle("Out of range!");
+                                    alert.setHeaderText(
+                                            "Incorrect input specified!");
+                                    alert.setContentText("Out of range!");
+                                    alert.show();
+                                }
+                            }
+                        }
+
+                        //System.out.println(row);
                     }
                 });
             }
@@ -140,28 +166,54 @@ public class View {
                 r.setOnMouseClicked(new EventHandler<MouseEvent>() {
                     @Override
                     public void handle(MouseEvent mouseevent) {
-                        if (r.getFill() == Paint.valueOf("BLUE")) {
-                            r.setFill(Paint.valueOf("RED"));
-                        }
-                        else if (r.getFill() == Paint.valueOf("RED")) {
+                        if (r.getFill() == Paint.valueOf("RED")) {
                             r.setFill(Paint.valueOf("BLUE"));
                         }
-                        int col = opponentBoard.getColumnIndex(r);
-                        int row = opponentBoard.getRowIndex(r);
-                        System.out.println(row);
+
+                        else {
+                            int col = opponentBoard.getColumnIndex(r);
+                            int row = opponentBoard.getRowIndex(r);
+
+                            if (shipHorizontal.isSelected()) {
+                                int[][] temp = {{col, row}, {col + 1, row}, {col + 2, row}};
+                                ArrayList<int[]> shipLoc = new ArrayList<int[]>(
+                                        Arrays.asList(temp));
+                                Ship ship = new Ship(shipLoc, CRUISER);
+                                try {
+                                    buildShipEnemy(ship);
+                                } catch (Exception e) {
+                                    Alert alert = new Alert(
+                                            Alert.AlertType.ERROR);
+                                    alert.setTitle("Out of range!");
+                                    alert.setHeaderText(
+                                            "Incorrect input specified!");
+                                    alert.setContentText("Out of range!");
+                                    alert.show();
+                                }
+                            }
+
+                            else if (shipVertical.isSelected()) {
+                                int[][] temp = {{col, row}, {col, row + 1}, {col, row + 2}};
+                                ArrayList<int[]> shipLoc = new ArrayList<int[]>(
+                                        Arrays.asList(temp));
+                                Ship ship = new Ship(shipLoc, CRUISER);
+                                try {
+                                    buildShipEnemy(ship);
+                                } catch (Exception e) {
+                                    Alert alert = new Alert(
+                                            Alert.AlertType.ERROR);
+                                    alert.setTitle("Out of range!");
+                                    alert.setHeaderText(
+                                            "Incorrect input specified!");
+                                    alert.setContentText("Out of range!");
+                                    alert.show();
+                                }
+                            }
+                        }
                     }
                 });
             }
         }
-
-        // Create the ship on the board after selecting the type
-        createShipBtn = new Button("Create Ship!");
-        createShipBtn.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-
-            }
-        });
 
         // Add the pane for the user to select the ship.
         rightPane = new FlowPane();
@@ -178,6 +230,12 @@ public class View {
         submarineBtn.setToggleGroup(shipGroup);
         destroyerBtn.setToggleGroup(shipGroup);
 
+        shipHorizontal = new RadioButton("Create Horizontal Ship");
+        shipVertical = new RadioButton("Create Vertical Ship");
+        shipDirection = new ToggleGroup();
+        shipHorizontal.setToggleGroup(shipDirection);
+        shipVertical.setToggleGroup(shipDirection);
+
         // Set the ship type.
         carrierBtn.setUserData(new Ship(ShipType.CARRIER));
         battleshipBtn.setUserData(new Ship(ShipType.BATTLESHIP));
@@ -186,8 +244,13 @@ public class View {
         destroyerBtn.setUserData(new Ship(ShipType.DESTROYER));
 
         carrierBtn.setSelected(true);
+
+        shipHorizontal.setSelected(true);
+
         rightPane.getChildren().addAll(carrierBtn, battleshipBtn, cruiserBtn,
-                                       submarineBtn, destroyerBtn, createShipBtn);
+                                       submarineBtn, destroyerBtn,
+                                       shipHorizontal,
+                                       shipVertical);
 
         root.setRight(rightPane);
 
@@ -226,10 +289,6 @@ public class View {
         return destroyerBtn;
     }
 
-    public Button getCreateShipBtn() {
-        return createShipBtn;
-    }
-
     public Rectangle[][] getBoard() {
         return board;
     }
@@ -238,8 +297,22 @@ public class View {
         return enemyBoard;
     }
 
-    public void buildShip(Ship ship) {
+    public void buildShipMy(Ship ship) {
+        for (int[] position : ship.getShipLoc()) {
+            Rectangle r = board[position[0]][position[1]];
+            myBoard.getChildren().remove(r);
+            r.setFill(Paint.valueOf("RED"));
+            myBoard.add(r, position[0], position[1]);
+        }
+    }
 
+    public void buildShipEnemy(Ship ship) {
+        for (int[] position : ship.getShipLoc()) {
+            Rectangle r = enemyBoard[position[0]][position[1]];
+            opponentBoard.getChildren().remove(r);
+            r.setFill(Paint.valueOf("RED"));
+            opponentBoard.add(r, position[0], position[1]);
+        }
     }
 
 }
