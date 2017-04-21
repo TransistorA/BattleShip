@@ -41,10 +41,13 @@ public class Main extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
         // Now, set up the scene, and connect it to the stage!
-        Scene scene = new Scene(this.theView.getRoot(), 500, 500);
+        Scene scene = new Scene(this.theView.getRoot(), 1500, 1500);
 
+        primaryStage.setTitle("Battleship");
         primaryStage.setScene(scene);
         primaryStage.sizeToScene();
+        // primaryStage.setFullScreen(true);
+        primaryStage.setMaximized(true);
         primaryStage.show();
     }
 

@@ -45,13 +45,18 @@ public class Controller implements EventHandler<ActionEvent> {
         /*
         this.theView.getRotateCWButton().setOnAction(this);
         this.theView.getRotateCCWButton().setOnAction(this);
-
-        this.theModel.getCarrier().bind(this.theView.getCarrierBtn().selectedProperty());
-        this.theModel.getBattleship().bind(this.theView.getBattleshipBtn().selectedProperty());
-        this.theModel.getCruiser().bind(this.theView.getCruiserBtn().selectedProperty());
-        this.theModel.getSubmarine().bind(this.theView.getSubmarineBtn().selectedProperty());
-        this.theModel.getDestroyer().bind(this.theView.getDestroyerBtn().selectedProperty());
          */
+        this.theModel.getCarrier().bind(
+                this.theView.getCarrierBtn().selectedProperty());
+        this.theModel.getBattleship().bind(
+                this.theView.getBattleshipBtn().selectedProperty());
+        this.theModel.getCruiser().bind(
+                this.theView.getCruiserBtn().selectedProperty());
+        this.theModel.getSubmarine().bind(
+                this.theView.getSubmarineBtn().selectedProperty());
+        this.theModel.getDestroyer().bind(
+                this.theView.getDestroyerBtn().selectedProperty());
+
     }
 
     /**

@@ -16,9 +16,13 @@
 package ship;
 
 public enum ShipType {
-    CARRIER(5), BATTLESHIP(4), CRUISER(3), SUBMARINE(3), DESTROYER(2);
+    CARRIER(5, "RED"), BATTLESHIP(4, "BLUE"), CRUISER(3, "GREEN"), SUBMARINE(3,
+                                                                             "ORANGE"), DESTROYER(
+            2, "YELLOW");
 
     public int size;
+
+    public String color;
 
     /**
      * Initialize the enumerated type ShipType.
@@ -26,13 +30,19 @@ public enum ShipType {
      * @author Joseph DiPalma
      *
      * @param size the size of the ship represented by the ShipType
+     * @param color the color of the ship represented by ShipType
      */
-    ShipType(int size) {
+    ShipType(int size, String color) {
         this.size = size;
+        this.color = color;
     }
 
     public int getSize() {
         return size;
+    }
+
+    public String getColor() {
+        return color;
     }
 
 }

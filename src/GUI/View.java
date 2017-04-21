@@ -17,9 +17,14 @@ package GUI;
 
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
+import javafx.geometry.Orientation;
+import javafx.geometry.Pos;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.control.RadioButton;
+import javafx.scene.control.ToggleButton;
 import javafx.scene.control.ToggleGroup;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.FlowPane;
@@ -52,12 +57,17 @@ public class View {
     private FlowPane rightPane;
 
     // Set up the radio buttons for the ships.
-    private RadioButton carrierBtn;
-    private RadioButton battleshipBtn;
-    private RadioButton cruiserBtn;
-    private RadioButton submarineBtn;
-    private RadioButton destroyerBtn;
+    private ToggleButton carrierBtn;
+    private ToggleButton battleshipBtn;
+    private ToggleButton cruiserBtn;
+    private ToggleButton submarineBtn;
+    private ToggleButton destroyerBtn;
     ToggleGroup shipGroup;
+
+    // Set up the buttons for rotating the ships.
+    private FlowPane bottomPane;
+    private Button rotateCWBtn;
+    private Button rotateCCWBtn;
 
     /**
      * Constructor for the View class.
@@ -65,6 +75,32 @@ public class View {
      * @author Joseph DiPalma
      *
      * @param theModel Model object that handles all of the logic
+     *
+     * The images used for the rotate buttons were found at the below website.
+     *
+     * @see
+     * <a href="http://stackoverflow.com/questions/27909652/android-rotate-an-
+     * image-clockwise-and-anticlockwise-with-two-simple-buttons">
+     * http://stackoverflow.com/questions/27909652/android-rotate-an-image-
+     * clockwise-and-anticlockwise-with-two-simple-buttons</a>
+     *
+     * The code to add the rotate images to the buttons was based off of code
+     * found at the below websites.
+     *
+     * @see
+     * <a href="http://stackoverflow.com/questions/29984228/javafx-button-background-image">
+     * http://stackoverflow.com/questions/29984228/javafx-button-background-image<\a>
+     *
+     * @see
+     * <a href="https://www.quora.com/How-do-I-set-size-of-a-image-inside-
+     * button-in-javafx-Is-it-possible-to-do-this-in-css">https://www.quora.com/
+     * How-do-I-set-size-of-a-image-inside-button-in-javafx-Is-it-possible-
+     * to-do-this-in-css</a>
+     *
+     * @see
+     * <a href="http://stackoverflow.com/questions/29984228/javafx-button-
+     * background-image">http://stackoverflow.com/questions/29984228/javafx-
+     * button-background-image<\a>
      */
     public View(Model theModel) {
         this.theModel = theModel;
@@ -80,8 +116,9 @@ public class View {
         // Create the board.
         for (int i = 0; i < 10; i++) {
             for (int j = 0; j < 10; j++) {
-                Rectangle r1 = new Rectangle(100 + 30 * j, 100 + 30 * i, 50, 50);
-                r1.setFill(Paint.valueOf("BLUE"));
+                Rectangle r1 = new Rectangle(100 + 30 * j, 100 + 30 * i, 75,
+                                             75);
+                r1.setFill(Paint.valueOf("GREY"));
                 r1.setStroke(Paint.valueOf("BLACK"));
                 board[i][j] = r1;
                 myBoard.add(r1, i + 50, j + 50);
@@ -92,13 +129,64 @@ public class View {
         // Create the enemy board.
         for (int i = 0; i < 10; i++) {
             for (int j = 0; j < 10; j++) {
-                Rectangle r1 = new Rectangle(500 + 30 * j, 100 + 30 * i, 50, 50);
-                r1.setFill(Paint.valueOf("BLUE"));
+                Rectangle r1 = new Rectangle(500 + 30 * j, 100 + 30 * i, 75,
+                                             75);
+                r1.setFill(Paint.valueOf("GREY"));
                 r1.setStroke(Paint.valueOf("BLACK"));
                 enemyBoard[i][j] = r1;
                 opponentBoard.add(r1, i + 50, j + 50);
             }
         }
+
+        // Add the buttons for rotating CW and CCW.
+        bottomPane = new FlowPane(Orientation.HORIZONTAL);
+        bottomPane.setAlignment(Pos.BASELINE_CENTER);
+        rotateCWBtn = new Button("Rotate ship clockwise");
+        rotateCCWBtn = new Button("Rotate ship counterclockwise");
+
+        // Add the images to the rotate buttons.
+        Image cwImage = new Image(
+                getClass().getResource("/GUI/cwbtn.png").toExternalForm());
+        ImageView cwImageView = new ImageView(cwImage);
+        rotateCWBtn.setGraphic(cwImageView);
+        Image ccwImage = new Image(
+                getClass().getResource("/GUI/ccwbtn.png").toExternalForm());
+        ImageView ccwImageView = new ImageView(ccwImage);
+        rotateCCWBtn.setGraphic(ccwImageView);
+
+        bottomPane.getChildren().add(new Label("Rotate ship: "));
+        bottomPane.getChildren().add(rotateCWBtn);
+        bottomPane.getChildren().add(rotateCCWBtn);
+        bottomPane.setHgap(10);
+        root.setBottom(bottomPane);
+
+        // Add the pane for the user to select the ship.
+        rightPane = new FlowPane(Orientation.VERTICAL);
+        rightPane.setAlignment(Pos.CENTER_RIGHT);
+        rightPane.setVgap(10);
+
+        rightPane.getChildren().add(new Label("Ship options: "));
+        carrierBtn = new ToggleButton("Carrier", new Rectangle(10.0, 10.0,
+                                                               Paint.valueOf(
+                                                                       ShipType.CARRIER.getColor())));
+        battleshipBtn = new ToggleButton("Battleship", new Rectangle(10.0, 10.0,
+                                                                     Paint.valueOf(
+                                                                             ShipType.BATTLESHIP.getColor())));
+        cruiserBtn = new ToggleButton("Cruiser", new Rectangle(10.0, 10.0,
+                                                               Paint.valueOf(
+                                                                       ShipType.CRUISER.getColor())));
+        submarineBtn = new ToggleButton("Submarine", new Rectangle(10.0, 10.0,
+                                                                   Paint.valueOf(
+                                                                           ShipType.SUBMARINE.getColor())));
+        destroyerBtn = new ToggleButton("Destroyer", new Rectangle(10.0, 10.0,
+                                                                   Paint.valueOf(
+                                                                           ShipType.DESTROYER.getColor())));
+        shipGroup = new ToggleGroup();
+        carrierBtn.setToggleGroup(shipGroup);
+        battleshipBtn.setToggleGroup(shipGroup);
+        cruiserBtn.setToggleGroup(shipGroup);
+        submarineBtn.setToggleGroup(shipGroup);
+        destroyerBtn.setToggleGroup(shipGroup);
 
         // Switch color on my grid when clicked.
         for (int i = 0; i < this.board.length; i++) {
@@ -107,11 +195,36 @@ public class View {
                 r.setOnMouseClicked(new EventHandler<MouseEvent>() {
                     @Override
                     public void handle(MouseEvent mouseevent) {
-                        if (r.getFill() == Paint.valueOf("BLUE")) {
-                            r.setFill(Paint.valueOf("RED"));
+                        if (r.getFill() == Paint.valueOf("GREY")) {
+                            // Find the ship that was clicked.
+                            if (carrierBtn.isSelected()) {
+                                r.setFill(Paint.valueOf(
+                                        ShipType.CARRIER.getColor()));
+                            }
+
+                            else if (battleshipBtn.isSelected()) {
+                                r.setFill(Paint.valueOf(
+                                        ShipType.BATTLESHIP.getColor()));
+                            }
+
+                            else if (cruiserBtn.isSelected()) {
+                                r.setFill(Paint.valueOf(
+                                        ShipType.CRUISER.getColor()));
+                            }
+
+                            else if (submarineBtn.isSelected()) {
+                                r.setFill(Paint.valueOf(
+                                        ShipType.SUBMARINE.getColor()));
+                            }
+
+                            else if (destroyerBtn.isSelected()) {
+                                r.setFill(Paint.valueOf(
+                                        ShipType.DESTROYER.getColor()));
+                            }
+
                         }
-                        else if (r.getFill() == Paint.valueOf("RED")) {
-                            r.setFill(Paint.valueOf("BLUE"));
+                        else if (r.getFill() != Paint.valueOf("GREY")) {
+                            r.setFill(Paint.valueOf("GREY"));
                         }
                         int col = grids.getColumnIndex(r);
                         System.out.println(col);
@@ -119,38 +232,6 @@ public class View {
                 });
             }
         }
-
-        // Switch color on the enemy grid when clicked.
-        for (int i = 0; i < this.enemyBoard.length; i++) {
-            for (Rectangle r : this.enemyBoard[i]) {
-                r.setOnMouseClicked(new EventHandler<MouseEvent>() {
-                    @Override
-                    public void handle(MouseEvent mouseevent) {
-                        if (r.getFill() == Paint.valueOf("BLUE")) {
-                            r.setFill(Paint.valueOf("RED"));
-                        }
-                        else if (r.getFill() == Paint.valueOf("RED")) {
-                            r.setFill(Paint.valueOf("BLUE"));
-                        }
-                    }
-                });
-            }
-        }
-
-        // Add the pane for the user to select the ship.
-        rightPane = new FlowPane();
-        rightPane.getChildren().add(new Label("Ship options: "));
-        carrierBtn = new RadioButton("Carrier");
-        battleshipBtn = new RadioButton("Battleship");
-        cruiserBtn = new RadioButton("Cruiser");
-        submarineBtn = new RadioButton("Submarine");
-        destroyerBtn = new RadioButton("Destroyer");
-        shipGroup = new ToggleGroup();
-        carrierBtn.setToggleGroup(shipGroup);
-        battleshipBtn.setToggleGroup(shipGroup);
-        cruiserBtn.setToggleGroup(shipGroup);
-        submarineBtn.setToggleGroup(shipGroup);
-        destroyerBtn.setToggleGroup(shipGroup);
 
         // Set the ship type.
         carrierBtn.setUserData(new Ship(ShipType.CARRIER));
@@ -169,6 +250,7 @@ public class View {
         root.setRight(rightPane);
 
         // Add both boards to the center pane.
+        grids.setAlignment(Pos.CENTER);
         grids.setMargin(opponentBoard, new Insets(5.0));
         grids.setMargin(myBoard, new Insets(5.0));
         grids.add(opponentBoard, 50, 50);
@@ -183,23 +265,23 @@ public class View {
         return root;
     }
 
-    public RadioButton getCarrierBtn() {
+    public ToggleButton getCarrierBtn() {
         return carrierBtn;
     }
 
-    public RadioButton getBattleshipBtn() {
+    public ToggleButton getBattleshipBtn() {
         return battleshipBtn;
     }
 
-    public RadioButton getCruiserBtn() {
+    public ToggleButton getCruiserBtn() {
         return cruiserBtn;
     }
 
-    public RadioButton getSubmarineBtn() {
+    public ToggleButton getSubmarineBtn() {
         return submarineBtn;
     }
 
-    public RadioButton getDestroyerBtn() {
+    public ToggleButton getDestroyerBtn() {
         return destroyerBtn;
     }
 
