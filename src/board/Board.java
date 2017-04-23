@@ -21,16 +21,23 @@ import player.Player;
 /**
  * The representation of the Board object
  *
- * @author computer
+ * @author Ben Xu
  */
 public class Board {
 
-    //the array represent the board
+    // The array representing the board.
     private int[][] board;
 
-    //the size of the board
+    // The size of the square board.
     private int size;
 
+    /**
+     * Constructor for the Board class.
+     *
+     * @author Ben Xu
+     *
+     * @param size size of the square board
+     */
     public Board(int size) {
         this.size = size;
         this.board = new int[size][size];
@@ -42,14 +49,24 @@ public class Board {
     }
 
     /**
-     * update the board after an attack
+     * Update the board after an attack.
      *
-     * @param loc - size 2 array provide the coordinate of the location
+     * @author Ben Xu
+     *
+     * @param loc - array of size 2 representing an ordered pair of the attack
+     * location
      */
     public void updateBoard(int[] loc) {
         this.board[loc[0]][loc[1]] = 1;
     }
 
+    /**
+     * Finds the String representation of the Board.
+     *
+     * @author Ben Xu
+     *
+     * @return the String representation of the Board
+     */
     @Override
     public String toString() {
         String strBoard = "";

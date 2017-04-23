@@ -120,31 +120,13 @@ public class View {
 
         grids = new GridPane();
 
+        // Create my board.
         myBoard = new GridPane();
-        // Create the board.
-        for (int i = 0; i < 10; i++) {
-            for (int j = 0; j < 10; j++) {
-                Rectangle r1 = new Rectangle(100 + 30 * j, 100 + 30 * i, 75,
-                                             75);
-                r1.setFill(Paint.valueOf("GREY"));
-                r1.setStroke(Paint.valueOf("BLACK"));
-                board[i][j] = r1;
-                myBoard.add(r1, i, j);
-            }
-        }
+        createBoard();
 
-        opponentBoard = new GridPane();
         // Create the enemy board.
-        for (int i = 0; i < 10; i++) {
-            for (int j = 0; j < 10; j++) {
-                Rectangle r1 = new Rectangle(500 + 30 * j, 100 + 30 * i, 75,
-                                             75);
-                r1.setFill(Paint.valueOf("GREY"));
-                r1.setStroke(Paint.valueOf("BLACK"));
-                enemyBoard[i][j] = r1;
-                opponentBoard.add(r1, i, j);
-            }
-        }
+        opponentBoard = new GridPane();
+        createEnemyBoard();
 
         // Add the buttons for rotating CW and CCW.
         bottomPane = new FlowPane(Orientation.HORIZONTAL);
@@ -173,29 +155,46 @@ public class View {
         rightPane.setAlignment(Pos.CENTER_RIGHT);
         rightPane.setVgap(10);
 
-        rightPane.getChildren().add(new Label("Ship options: "));
-        carrierBtn = new ToggleButton("Carrier", new Rectangle(10.0, 10.0,
-                                                               Paint.valueOf(
-                                                                       ShipType.CARRIER.getColor())));
-        battleshipBtn = new ToggleButton("Battleship", new Rectangle(10.0, 10.0,
-                                                                     Paint.valueOf(
-                                                                             ShipType.BATTLESHIP.getColor())));
-        cruiserBtn = new ToggleButton("Cruiser", new Rectangle(10.0, 10.0,
-                                                               Paint.valueOf(
-                                                                       ShipType.CRUISER.getColor())));
-        submarineBtn = new ToggleButton("Submarine", new Rectangle(10.0, 10.0,
-                                                                   Paint.valueOf(
-                                                                           ShipType.SUBMARINE.getColor())));
-        destroyerBtn = new ToggleButton("Destroyer", new Rectangle(10.0, 10.0,
-                                                                   Paint.valueOf(
-                                                                           ShipType.DESTROYER.getColor())));
-        shipGroup = new ToggleGroup();
-        carrierBtn.setToggleGroup(shipGroup);
-        battleshipBtn.setToggleGroup(shipGroup);
-        cruiserBtn.setToggleGroup(shipGroup);
-        submarineBtn.setToggleGroup(shipGroup);
-        destroyerBtn.setToggleGroup(shipGroup);
+        // Create all of the labels and buttons related to the ships.
+        createShips();
 
+        // Update the ship when it is hit or rotated.
+        updateShip();
+
+        // Set the ship type.
+        carrierBtn.setUserData(new Ship(ShipType.CARRIER));
+        battleshipBtn.setUserData(new Ship(ShipType.BATTLESHIP));
+        cruiserBtn.setUserData(new Ship(ShipType.CRUISER));
+        submarineBtn.setUserData(new Ship(ShipType.SUBMARINE));
+        destroyerBtn.setUserData(new Ship(ShipType.DESTROYER));
+
+        carrierBtn.setSelected(true);
+        rightPane.getChildren().add(carrierBtn);
+        rightPane.getChildren().add(battleshipBtn);
+        rightPane.getChildren().add(cruiserBtn);
+        rightPane.getChildren().add(submarineBtn);
+        rightPane.getChildren().add(destroyerBtn);
+
+        root.setRight(rightPane);
+
+        // Add both boards to the center pane.
+        grids.setAlignment(Pos.CENTER);
+        grids.setMargin(opponentBoard, new Insets(5.0));
+        grids.setMargin(myBoard, new Insets(5.0));
+        grids.add(opponentBoard, 50, 50);
+        grids.add(myBoard, 70, 50);
+        grids.setPrefSize(1000, 1000);
+
+        root.setCenter(grids);
+
+    }
+
+    /**
+     * Update the ship when it is rotated or hit.
+     *
+     * @author Joseph DiPalma
+     */
+    public void updateShip() {
         // Create or rotate ship, or destroy ship when clicking on ship area
         for (int i = 0; i < this.board.length; i++) {
             for (Rectangle r : this.board[i]) {
@@ -291,85 +290,80 @@ public class View {
                                 alert.setContentText("Out of range!");
                                 alert.show();
                             }
-
                         }
-
-                        //System.out.println(row);
                     }
                 });
             }
         }
+    }
 
-//        // Switch color on my grid when clicked.
-//        for (int i = 0; i < this.board.length; i++) {
-//            for (Rectangle r : this.board[i]) {
-//
-//                r.setOnMouseClicked(new EventHandler<MouseEvent>() {
-//                    @Override
-//                    public void handle(MouseEvent mouseevent) {
-//                        if (r.getFill() == Paint.valueOf("GREY")) {
-//                            // Find the ship that was clicked.
-//                            if (carrierBtn.isSelected()) {
-//                                r.setFill(Paint.valueOf(
-//                                        ShipType.CARRIER.getColor()));
-//                            }
-//
-//                            else if (battleshipBtn.isSelected()) {
-//                                r.setFill(Paint.valueOf(
-//                                        ShipType.BATTLESHIP.getColor()));
-//                            }
-//
-//                            else if (cruiserBtn.isSelected()) {
-//                                r.setFill(Paint.valueOf(
-//                                        ShipType.CRUISER.getColor()));
-//                            }
-//
-//                            else if (submarineBtn.isSelected()) {
-//                                r.setFill(Paint.valueOf(
-//                                        ShipType.SUBMARINE.getColor()));
-//                            }
-//
-//                            else if (destroyerBtn.isSelected()) {
-//                                r.setFill(Paint.valueOf(
-//                                        ShipType.DESTROYER.getColor()));
-//                            }
-//
-//                        }
-//                        else if (r.getFill() != Paint.valueOf("GREY")) {
-//                            r.setFill(Paint.valueOf("GREY"));
-//                        }
-//                        int col = grids.getColumnIndex(r);
-//                        System.out.println(col);
-//                    }
-//                });
-//            }
-//        }
-        // Set the ship type.
-        carrierBtn.setUserData(new Ship(ShipType.CARRIER));
-        battleshipBtn.setUserData(new Ship(ShipType.BATTLESHIP));
-        cruiserBtn.setUserData(new Ship(ShipType.CRUISER));
-        submarineBtn.setUserData(new Ship(ShipType.SUBMARINE));
-        destroyerBtn.setUserData(new Ship(ShipType.DESTROYER));
+    /**
+     * Create all of the Label, ToggleButton, and ToggleGroup objects for the
+     * ships.
+     *
+     * @author Joseph DiPalma
+     */
+    public void createShips() {
+        rightPane.getChildren().add(new Label("Ship options: "));
+        carrierBtn = new ToggleButton("Carrier", new Rectangle(10.0, 10.0,
+                                                               Paint.valueOf(
+                                                                       ShipType.CARRIER.getColor())));
+        battleshipBtn = new ToggleButton("Battleship", new Rectangle(10.0, 10.0,
+                                                                     Paint.valueOf(
+                                                                             ShipType.BATTLESHIP.getColor())));
+        cruiserBtn = new ToggleButton("Cruiser", new Rectangle(10.0, 10.0,
+                                                               Paint.valueOf(
+                                                                       ShipType.CRUISER.getColor())));
+        submarineBtn = new ToggleButton("Submarine", new Rectangle(10.0, 10.0,
+                                                                   Paint.valueOf(
+                                                                           ShipType.SUBMARINE.getColor())));
+        destroyerBtn = new ToggleButton("Destroyer", new Rectangle(10.0, 10.0,
+                                                                   Paint.valueOf(
+                                                                           ShipType.DESTROYER.getColor())));
+        shipGroup = new ToggleGroup();
+        carrierBtn.setToggleGroup(shipGroup);
+        battleshipBtn.setToggleGroup(shipGroup);
+        cruiserBtn.setToggleGroup(shipGroup);
+        submarineBtn.setToggleGroup(shipGroup);
+        destroyerBtn.setToggleGroup(shipGroup);
+    }
 
-        carrierBtn.setSelected(true);
-        rightPane.getChildren().add(carrierBtn);
-        rightPane.getChildren().add(battleshipBtn);
-        rightPane.getChildren().add(cruiserBtn);
-        rightPane.getChildren().add(submarineBtn);
-        rightPane.getChildren().add(destroyerBtn);
+    /**
+     * Create the board for the enemy.
+     *
+     * @author Joseph DiPalma
+     */
+    public void createEnemyBoard() {
+        // Create the enemy board.
+        for (int i = 0; i < 10; i++) {
+            for (int j = 0; j < 10; j++) {
+                Rectangle r1 = new Rectangle(500 + 30 * j, 100 + 30 * i, 75,
+                                             75);
+                r1.setFill(Paint.valueOf("GREY"));
+                r1.setStroke(Paint.valueOf("BLACK"));
+                enemyBoard[i][j] = r1;
+                opponentBoard.add(r1, i, j);
+            }
+        }
+    }
 
-        root.setRight(rightPane);
-
-        // Add both boards to the center pane.
-        grids.setAlignment(Pos.CENTER);
-        grids.setMargin(opponentBoard, new Insets(5.0));
-        grids.setMargin(myBoard, new Insets(5.0));
-        grids.add(opponentBoard, 50, 50);
-        grids.add(myBoard, 70, 50);
-        grids.setPrefSize(1000, 1000);
-
-        root.setCenter(grids);
-
+    /**
+     * Create my board.
+     *
+     * @author Joseph DiPalma
+     */
+    public void createBoard() {
+        // Create the board.
+        for (int i = 0; i < 10; i++) {
+            for (int j = 0; j < 10; j++) {
+                Rectangle r1 = new Rectangle(100 + 30 * j, 100 + 30 * i, 75,
+                                             75);
+                r1.setFill(Paint.valueOf("GREY"));
+                r1.setStroke(Paint.valueOf("BLACK"));
+                board[i][j] = r1;
+                myBoard.add(r1, i, j);
+            }
+        }
     }
 
     public BorderPane getRoot() {
@@ -404,6 +398,13 @@ public class View {
         return enemyBoard;
     }
 
+    /**
+     * Build the ship in the GUI corresponding to the Ship object.
+     *
+     * @author Annan Miao
+     *
+     * @param ship Ship object to build in the GUI
+     */
     public void buildShipMy(Ship ship) {
         for (int[] position : ship.getShipLoc()) {
             Rectangle r = board[position[0]][position[1]];

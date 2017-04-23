@@ -31,6 +31,13 @@ public class Model {
     private SimpleBooleanProperty submarine;
     private SimpleBooleanProperty destroyer;
 
+    // Check which ships the user has already added.
+    private SimpleBooleanProperty addedCarrier;
+    private SimpleBooleanProperty addedBattleship;
+    private SimpleBooleanProperty addedCruiser;
+    private SimpleBooleanProperty addedSubmarine;
+    private SimpleBooleanProperty addedDestroyer;
+
     /**
      * Constructor for the Model class.
      *
@@ -42,6 +49,12 @@ public class Model {
         this.cruiser = new SimpleBooleanProperty(false);
         this.submarine = new SimpleBooleanProperty(false);
         this.destroyer = new SimpleBooleanProperty(false);
+
+        this.addedCarrier = new SimpleBooleanProperty(false);
+        this.addedBattleship = new SimpleBooleanProperty(false);
+        this.addedCruiser = new SimpleBooleanProperty(false);
+        this.addedSubmarine = new SimpleBooleanProperty(false);
+        this.addedDestroyer = new SimpleBooleanProperty(false);
     }
 
     public SimpleBooleanProperty getCarrier() {
@@ -62,6 +75,26 @@ public class Model {
 
     public SimpleBooleanProperty getDestroyer() {
         return destroyer;
+    }
+
+    public SimpleBooleanProperty getAddedCarrier() {
+        return addedCarrier;
+    }
+
+    public SimpleBooleanProperty getAddedBattleship() {
+        return addedBattleship;
+    }
+
+    public SimpleBooleanProperty getAddedCruiser() {
+        return addedCruiser;
+    }
+
+    public SimpleBooleanProperty getAddedSubmarine() {
+        return addedSubmarine;
+    }
+
+    public SimpleBooleanProperty getAddedDestroyer() {
+        return addedDestroyer;
     }
 
 }

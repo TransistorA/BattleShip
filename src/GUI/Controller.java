@@ -57,6 +57,16 @@ public class Controller implements EventHandler<ActionEvent> {
         this.theModel.getDestroyer().bind(
                 this.theView.getDestroyerBtn().selectedProperty());
 
+        this.theModel.getAddedCarrier().bind(
+                this.theView.getCarrierBtn().selectedProperty());
+        this.theModel.getAddedBattleship().bind(
+                this.theView.getBattleshipBtn().selectedProperty());
+        this.theModel.getAddedCruiser().bind(
+                this.theView.getCruiserBtn().selectedProperty());
+        this.theModel.getAddedSubmarine().bind(
+                this.theView.getSubmarineBtn().selectedProperty());
+        this.theModel.getAddedDestroyer().bind(
+                this.theView.getDestroyerBtn().selectedProperty());
     }
 
     /**

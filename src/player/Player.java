@@ -27,52 +27,68 @@ import ship.ShipType;
  */
 public class Player {
 
-    //array of ships
+    // Array of the Ship objects for this Player.
     private ArrayList<Ship> myShips;
-    //index for initalize ship, internal use only
+
+    // Index used internally to initialize the ship.
     private int initIndex;
 
-    //ship type configuration
-    private final int[] shipConfig;
+    // Configure the ship type.
+    private final int[] SHIP_CONFIG;
 
-    //type array:Carrier, Battleship, Cruiser, Submarine, Destroyer
-    private final ShipType[] types;
+    // Holds the ShipType types for the Ship objects.
+    private final ShipType[] TYPES;
 
-    //totalShip count
-    private final int totalShips;
+    // Total number of ships.
+    private final int TOTAL_SHIPS;
 
-    //current player board
+    // Board for the current Player.
     private Board myBoard;
 
-    //current target board that stores the attack attempts
+    // Store the attack attempts from the current Player.
     private Board targetBoard;
 
-    //count of the unsunk ships for current player
+    // Keeps track of how many ships remain for the player.
     private int shipRemain;
 
-    //setup the configuration of the player ships
+    /**
+     * Constructor for the Player class.
+     *
+     * @author Ben Xu
+     */
     public Player() {
         this.initIndex = 0;
         //init constants
-        this.shipConfig = new int[]{1, 1, 1, 1, 1};
-        this.totalShips = 5;
-        //Carrier, Battleship, Cruiser, Submarine, Destroyer
-        this.types = new ShipType[]{ShipType.CARRIER, ShipType.BATTLESHIP, ShipType.CRUISER, ShipType.SUBMARINE, ShipType.DESTROYER};
+        this.SHIP_CONFIG = new int[]{1, 1, 1, 1, 1};
+        this.TOTAL_SHIPS = 5;
+        // Add all of the ShipType types.
+        this.TYPES = new ShipType[]{ShipType.CARRIER, ShipType.BATTLESHIP, ShipType.CRUISER, ShipType.SUBMARINE, ShipType.DESTROYER};
 
-        //init ship array
+        // Initialize the array of ships.
         this.myShips = new ArrayList<>();
         initShips();
     }
 
+    /**
+     * Initialize the ships.
+     *
+     * @author Ben Xu
+     */
     private void initShips() {
-        for (int i = 0; i < shipConfig.length; i++) {
-            for (int x = 0; x < shipConfig[i]; x++) {
-                myShips.add(new Ship(types[i]));
+        for (int i = 0; i < SHIP_CONFIG.length; i++) {
+            for (int x = 0; x < SHIP_CONFIG[i]; x++) {
+                myShips.add(new Ship(TYPES[i]));
             }
         }
-
     }
 
+    /**
+     * Initialize the location of the ship.
+     *
+     * @author Ben Xu
+     *
+     * @param loc the location to initialize for the ship
+     */
     public void initShipLocations(int[] loc) {
         if (this.initIndex < this.myShips.size()) {
             this.myShips.get(initIndex).setLocation(loc);
@@ -80,23 +96,55 @@ public class Player {
         this.initIndex += 1;
     }
 
+    /**
+     * Attack the enemy.
+     *
+     * @author Ben Xu
+     *
+     * @param loc location to attack on the enemy Board
+     * @param enemy Player object representing the enemy
+     * @return true if successful, false otherwise
+     */
     public boolean attack(int[] loc, Player enemy) {
-        //update self tracking board
+        // Update the self tracking board.
         this.updateSelf(loc);
-        //update ships for enemy
+
+        // Update the ships for the enemy.
         return enemy.updateShips(loc);
     }
 
+    /**
+     * Update Board when the enemy attacks.
+     *
+     * @author Ben Xu
+     *
+     * @param loc the location where the enemy attacked
+     */
     public void defend(int[] loc) {
         if (this.updateShips(loc)) {
             this.updateSelf(loc);
         }
     }
 
+    /**
+     * Finds out how many ships remain.
+     *
+     * @author Ben Xu
+     *
+     * @return the number of ships remaining
+     */
     public int getShipRemain() {
         return shipRemain;
     }
 
+    /**
+     * Update the ship where it was hit.
+     *
+     * @author Ben Xu
+     *
+     * @param loc location where the ship was hit
+     * @return true if successful, false otherwise
+     */
     private boolean updateShips(int[] loc) {
         boolean isHit = false;
         for (Ship s : myShips) {
@@ -108,16 +156,21 @@ public class Player {
             }
             if (s.isIsSunk()) {
                 shipRemain -= 1;
-
             }
         }
         return isHit;
-
     }
 
 //    private void updateEnemy(int[] loc) {
 //        this.myBoard.updateBoard(loc);
 //    }
+    /**
+     * Update my Board.
+     *
+     * @author Ben Xu
+     *
+     * @param loc location to update on my Board
+     */
     private void updateSelf(int[] loc) {
         this.targetBoard.updateBoard(loc);
     }
