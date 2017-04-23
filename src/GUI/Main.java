@@ -33,7 +33,7 @@ public class Main extends Application {
     @Override
     public void init() throws Exception {
         super.init();
-        this.theModel = new Model();
+        //this.theModel = new Model();
         this.theView = new View(theModel);
         this.theCtrl = new Controller(theModel, theView);
     }

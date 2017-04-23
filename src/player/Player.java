@@ -175,4 +175,16 @@ public class Player {
         this.targetBoard.updateBoard(loc);
     }
 
+    /**
+     * check whether or not current player has lose yet
+     *
+     * @return
+     */
+    public boolean didILose() {
+        if (this.shipRemain == 0) {
+            return true;
+
+        }
+        return false;
+    }
 }
