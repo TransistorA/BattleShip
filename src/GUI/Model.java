@@ -16,6 +16,7 @@
 package GUI;
 
 import javafx.beans.property.SimpleBooleanProperty;
+import player.Player;
 
 /**
  * Model part of the MVC design pattern.
@@ -31,17 +32,24 @@ public class Model {
     private SimpleBooleanProperty submarine;
     private SimpleBooleanProperty destroyer;
 
+    private View p1View;
+    private View p2View;
+    private Player p1;
+    private Player p2;
+
     /**
      * Constructor for the Model class.
      *
-     * @author Joseph DiPalma
+     * @author Joseph DiPalma, Ben Xu
      */
-    public Model() {
+    public Model(View p1View, View p2View) {
         this.carrier = new SimpleBooleanProperty(true);
         this.battleship = new SimpleBooleanProperty(false);
         this.cruiser = new SimpleBooleanProperty(false);
         this.submarine = new SimpleBooleanProperty(false);
         this.destroyer = new SimpleBooleanProperty(false);
+        this.p1View = p1View;
+        this.p2View = p2View;
     }
 
     public SimpleBooleanProperty getCarrier() {
@@ -62,6 +70,50 @@ public class Model {
 
     public SimpleBooleanProperty getDestroyer() {
         return destroyer;
+    }
+
+    public int[] getTargetLocation() {
+        //TODO
+    }
+
+    public void enableAttack(Player p) {
+
+    }
+
+    public void disableAttack(Player p) {
+
+    }
+
+    public void disableShipSelection(Player p) {
+
+    }
+
+    public void finishInitShip(Player p) {
+
+    }
+
+    public void displayVictoryMsg(Player p) {
+
+    }
+
+    public void displayDefeatMsg(Player p) {
+
+    }
+
+    public void displayTargetStatus() {
+
+    }
+
+    public void startGame() {
+
+    }
+
+    public void showGUI(Player p) {
+
+    }
+
+    public void disableGUIControl(Player p) {
+
     }
 
 }
