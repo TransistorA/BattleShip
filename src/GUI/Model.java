@@ -136,4 +136,24 @@ public class Model {
         return addedDestroyer;
     }
 
+    public void setAddedCarrier(SimpleBooleanProperty addedCarrier) {
+        this.addedCarrier = addedCarrier;
+    }
+
+    public void setAddedBattleship(SimpleBooleanProperty addedBattleship) {
+        this.addedBattleship = addedBattleship;
+    }
+
+    public void setAddedCruiser(SimpleBooleanProperty addedCruiser) {
+        this.addedCruiser = addedCruiser;
+    }
+
+    public void setAddedSubmarine(SimpleBooleanProperty addedSubmarine) {
+        this.addedSubmarine = addedSubmarine;
+    }
+
+    public void setAddedDestroyer(SimpleBooleanProperty addedDestroyer) {
+        this.addedDestroyer = addedDestroyer;
+    }
+
 }
