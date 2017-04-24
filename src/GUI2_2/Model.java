@@ -13,7 +13,7 @@
 *
 * ****************************************
  */
-package GUI;
+package GUI2_2;
 
 import javafx.beans.property.SimpleBooleanProperty;
 

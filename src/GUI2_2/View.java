@@ -13,10 +13,11 @@
 *
 * ****************************************
  */
-package GUI;
+package GUI2_2;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Orientation;
@@ -26,8 +27,6 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.control.ToggleGroup;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.FlowPane;
@@ -129,7 +128,7 @@ public class View {
         createEnemyBoard();
 
         // Add the buttons for rotating CW and CCW.
-        bottomPane = new FlowPane(Orientation.HORIZONTAL);
+        /*bottomPane = new FlowPane(Orientation.HORIZONTAL);
         bottomPane.setAlignment(Pos.BASELINE_CENTER);
         rotateCWBtn = new Button("Rotate ship clockwise");
         rotateCCWBtn = new Button("Rotate ship counterclockwise");
@@ -148,8 +147,7 @@ public class View {
         bottomPane.getChildren().add(rotateCWBtn);
         bottomPane.getChildren().add(rotateCCWBtn);
         bottomPane.setHgap(10);
-        root.setBottom(bottomPane);
-
+        root.setBottom(bottomPane);*/
         // Add the pane for the user to select the ship.
         rightPane = new FlowPane(Orientation.VERTICAL);
         rightPane.setAlignment(Pos.CENTER_RIGHT);
@@ -186,6 +184,15 @@ public class View {
         grids.setPrefSize(1000, 1000);
 
         root.setCenter(grids);
+
+        Button startGame = new Button("start game");
+        startGame.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                startGame();
+            }
+        });
+        grids.getChildren().add(startGame);
 
     }
 
@@ -282,13 +289,13 @@ public class View {
                                 buildShipMy(ship);
                             } catch (Exception e) {
                                 // System.out.println(e.toString());
-                                Alert alert = new Alert(
+                                /*Alert alert = new Alert(
                                         Alert.AlertType.ERROR);
                                 alert.setTitle("Out of range!");
                                 alert.setHeaderText(
                                         "Incorrect input specified!");
                                 alert.setContentText("Out of range!");
-                                alert.show();
+                                alert.show();*/
                             }
                         }
                     }
@@ -407,6 +414,31 @@ public class View {
      */
     public void buildShipMy(Ship ship) {
         for (int[] position : ship.getShipLoc()) {
+            if (position[0] > board.length - 1 || position[1] > board.length - 1) {
+                Alert alert = new Alert(
+                        Alert.AlertType.ERROR);
+                alert.setTitle("Ship Location Error");
+                alert.setHeaderText(
+                        "Ship out of board range!");
+                alert.setContentText(
+                        "You cannot set ship here!");
+                alert.show();
+                return;
+            }
+            if (board[position[0]][position[1]].getFill() != Paint.valueOf(
+                    "GREY")) {
+                Alert alert = new Alert(
+                        Alert.AlertType.ERROR);
+                alert.setTitle("Ship Location Error");
+                alert.setHeaderText(
+                        "Ship cannot overlap!");
+                alert.setContentText(
+                        "You cannot set ship here!");
+                alert.show();
+                return;
+            }
+        }
+        for (int[] position : ship.getShipLoc()) {
             Rectangle r = board[position[0]][position[1]];
             myBoard.getChildren().remove(r);
             r.setFill(Paint.valueOf(ship.getShipType().getColor()));
@@ -414,4 +446,37 @@ public class View {
         }
     }
 
+    public void startGame() {
+        int[][] board2 = new int[board.length][board.length];
+        for (int i = 0; i < this.board.length; i++) {
+            for (int j = 0; j < this.board[0].length; j++) {
+                if (board[i][j].getFill() != Paint.valueOf("GREY")) {
+                    board2[i][j] = 1; // 1 represents ship area, 0 represents sea area
+                }
+                else {
+                    board2[i][j] = 0;
+                }
+            }
+        }
+        for (int i = 0; i < this.board.length; i++) {
+            for (int j = 0; j < this.board[0].length; j++) {
+                board[i][j].setFill(Paint.valueOf("GREY"));
+            }
+        }
+        for (int i = 0; i < this.board.length; i++) {
+            for (Rectangle r : board[i]) {
+                r.setOnMouseClicked(new EventHandler<MouseEvent>() {
+                    @Override
+                    public void handle(MouseEvent mouseevent) {
+                        int col = myBoard.getColumnIndex(r);
+                        int row = myBoard.getRowIndex(r);
+                        if (board2[col][row] == 1) {
+                            r.setFill(Paint.valueOf("BLUE"));
+                        }
+                    }
+                });
+
+            }
+        }
+    }
 }

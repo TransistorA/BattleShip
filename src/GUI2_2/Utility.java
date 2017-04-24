@@ -13,7 +13,7 @@
 *
 * ****************************************
  */
-package GUI;
+package GUI2_2;
 
 /**
  * Contains utility methods for the GUI.
