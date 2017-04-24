@@ -32,6 +32,13 @@ public class Model {
     private SimpleBooleanProperty submarine;
     private SimpleBooleanProperty destroyer;
 
+    // Check which ships the user has already added.
+    private SimpleBooleanProperty addedCarrier;
+    private SimpleBooleanProperty addedBattleship;
+    private SimpleBooleanProperty addedCruiser;
+    private SimpleBooleanProperty addedSubmarine;
+    private SimpleBooleanProperty addedDestroyer;
+
     private View p1View;
     private View p2View;
     private Player p1;
@@ -50,6 +57,12 @@ public class Model {
         this.destroyer = new SimpleBooleanProperty(false);
         this.p1View = p1View;
         this.p2View = p2View;
+
+        this.addedCarrier = new SimpleBooleanProperty(false);
+        this.addedBattleship = new SimpleBooleanProperty(false);
+        this.addedCruiser = new SimpleBooleanProperty(false);
+        this.addedSubmarine = new SimpleBooleanProperty(false);
+        this.addedDestroyer = new SimpleBooleanProperty(false);
     }
 
     public SimpleBooleanProperty getCarrier() {
@@ -74,6 +87,7 @@ public class Model {
 
     public int[] getTargetLocation() {
         //TODO
+        return null;
     }
 
     public void enableAttack(Player p) {
