@@ -15,21 +15,15 @@
  */
 package GUI;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import javafx.beans.property.SimpleBooleanProperty;
-import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
-import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.GridPane;
@@ -37,11 +31,6 @@ import javafx.scene.paint.Paint;
 import javafx.scene.shape.Rectangle;
 import ship.Ship;
 import ship.ShipType;
-import static ship.ShipType.BATTLESHIP;
-import static ship.ShipType.CARRIER;
-import static ship.ShipType.CRUISER;
-import static ship.ShipType.DESTROYER;
-import static ship.ShipType.SUBMARINE;
 
 /**
  * View part of the MVC design pattern.
@@ -51,12 +40,10 @@ import static ship.ShipType.SUBMARINE;
 public class View {
 
     // Create the boards.
-    private Rectangle[][] board = new Rectangle[10][10];
+    public Rectangle[][] board = new Rectangle[10][10];
     private Rectangle[][] enemyBoard = new Rectangle[10][10];
-    private GridPane myBoard;
+    public GridPane myBoard;
     private GridPane opponentBoard;
-
-    private Model theModel;
 
     private BorderPane root;
 
@@ -82,8 +69,6 @@ public class View {
      * Constructor for the View class.
      *
      * @author Joseph DiPalma
-     *
-     * @param theModel Model object that handles all of the logic
      *
      * The images used for the rotate buttons were found at the below website.
      *
@@ -111,9 +96,7 @@ public class View {
      * background-image">http://stackoverflow.com/questions/29984228/javafx-
      * button-background-image</a>
      */
-    public View(Model theModel) {
-        this.theModel = theModel;
-
+    public View() {
         root = new BorderPane();
         root.setPadding(new Insets(15, 15, 15, 15));
         root.setPrefHeight(1500);
@@ -159,9 +142,6 @@ public class View {
         // Create all of the labels and buttons related to the ships.
         createShips();
 
-        // Update the ship when it is hit or rotated.
-        updateShip();
-
         // Set the ship type.
         carrierBtn.setUserData(new Ship(ShipType.CARRIER));
         battleshipBtn.setUserData(new Ship(ShipType.BATTLESHIP));
@@ -188,124 +168,6 @@ public class View {
 
         root.setCenter(grids);
 
-    }
-
-    /**
-     * Update the ship when it is rotated or hit.
-     *
-     * @author Joseph DiPalma
-     */
-    public void updateShip() {
-        // Create or rotate ship, or destroy ship when clicking on ship area
-        for (int i = 0; i < this.board.length; i++) {
-            for (Rectangle r : this.board[i]) {
-
-                r.setOnMouseClicked(new EventHandler<MouseEvent>() {
-                    @Override
-                    public void handle(MouseEvent mouseevent) {
-
-                        int col = myBoard.getColumnIndex(r);
-                        int row = myBoard.getRowIndex(r);
-
-                        int[][] temp = null;
-
-                        if (carrierBtn.isSelected() && !(carrierBtn.isDisable())) {
-                            temp = new int[5][2];
-                            for (int i = 0; i < 5; i++) {
-                                int[] tempArray = {col + i, row};
-                                temp[i] = tempArray;
-                            }
-
-                            // Make the user lose the ability to select the carrier.
-                            carrierBtn.setDisable(true);
-                        }
-
-                        else if (battleshipBtn.isSelected() && !(battleshipBtn.isDisable())) {
-                            temp = new int[4][2];
-                            for (int i = 0; i < 4; i++) {
-                                int[] tempArray = {col + i, row};
-                                temp[i] = tempArray;
-                            }
-
-                            // Make the user lose the ability to select the carrier.
-                            battleshipBtn.setDisable(true);
-                        }
-
-                        else if (cruiserBtn.isSelected() && !(cruiserBtn.isDisable())) {
-                            temp = new int[3][2];
-                            for (int i = 0; i < 3; i++) {
-                                int[] tempArray = {col + i, row};
-                                temp[i] = tempArray;
-                            }
-
-                            // Make the user lose the ability to select the carrier.
-                            cruiserBtn.setDisable(true);
-                        }
-
-                        else if (submarineBtn.isSelected() && !(submarineBtn.isDisable())) {
-                            temp = new int[3][2];
-                            for (int i = 0; i < 3; i++) {
-                                int[] tempArray = {col + i, row};
-                                temp[i] = tempArray;
-                            }
-
-                            // Make the user lose the ability to select the carrier.
-                            submarineBtn.setDisable(true);
-                        }
-
-                        else if (destroyerBtn.isSelected() && !(destroyerBtn.isDisable())) {
-                            temp = new int[2][2];
-                            for (int i = 0; i < 2; i++) {
-                                int[] tempArray = {col + i, row};
-                                temp[i] = tempArray;
-                            }
-
-                            // Make the user lose the ability to select the carrier.
-                            destroyerBtn.setDisable(true);
-                        }
-
-                        ArrayList<int[]> shipLoc = new ArrayList<int[]>(
-                                Arrays.asList(temp));
-
-                        Ship ship = null;
-
-                        if (carrierBtn.isSelected()) {
-                            ship = new Ship(shipLoc, CARRIER);
-                        }
-
-                        else if (battleshipBtn.isSelected()) {
-                            ship = new Ship(shipLoc, BATTLESHIP);
-                        }
-
-                        else if (cruiserBtn.isSelected()) {
-                            ship = new Ship(shipLoc, CRUISER);
-                        }
-
-                        else if (submarineBtn.isSelected()) {
-                            ship = new Ship(shipLoc, SUBMARINE);
-                        }
-
-                        else if (destroyerBtn.isSelected()) {
-                            ship = new Ship(shipLoc, DESTROYER);
-                        }
-
-                        try {
-                            buildShipMy(ship);
-                        } catch (Exception e) {
-                            // System.out.println(e.toString());
-                            Alert alert = new Alert(
-                                    Alert.AlertType.ERROR);
-                            alert.setTitle("Out of range!");
-                            alert.setHeaderText(
-                                    "Incorrect input specified!");
-                            alert.setContentText("Out of range!");
-                            alert.show();
-                        }
-
-                    }
-                });
-            }
-        }
     }
 
     /**
@@ -409,43 +271,8 @@ public class View {
         return enemyBoard;
     }
 
-    /**
-     * Build the ship in the GUI corresponding to the Ship object.
-     *
-     * @author Annan Miao
-     *
-     * @param ship Ship object to build in the GUI
-     */
-    public void buildShipMy(Ship ship) {
-        for (int[] position : ship.getShipLoc()) {
-            Rectangle r = board[position[0]][position[1]];
-            myBoard.getChildren().remove(r);
-            r.setFill(Paint.valueOf(ship.getShipType().getColor()));
-            myBoard.add(r, position[0], position[1]);
-        }
-
-        // Make the user lose the ability to select the toggle button for the ship.
-        ShipType shipType = ship.getShipType();
-
-        if (shipType == ShipType.CARRIER) {
-            this.theModel.setAddedCarrier(new SimpleBooleanProperty(true));
-        }
-
-        else if (shipType == ShipType.BATTLESHIP) {
-            this.theModel.setAddedBattleship(new SimpleBooleanProperty(true));
-        }
-
-        else if (shipType == ShipType.CRUISER) {
-            this.theModel.setAddedCruiser(new SimpleBooleanProperty(true));
-        }
-
-        else if (shipType == ShipType.SUBMARINE) {
-            this.theModel.setAddedSubmarine(new SimpleBooleanProperty(true));
-        }
-
-        else if (shipType == ShipType.DESTROYER) {
-            this.theModel.setAddedDestroyer(new SimpleBooleanProperty(true));
-        }
+    public GridPane getMyBoard() {
+        return myBoard;
     }
 
 }

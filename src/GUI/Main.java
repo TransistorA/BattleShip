@@ -26,22 +26,26 @@ import javafx.stage.Stage;
  */
 public class Main extends Application {
 
-    private View theView;
+    // The current player.
+    private View theView1;
+    // The enemy.
+    private View theView2;
     private Model theModel;
     private Controller theCtrl;
 
     @Override
     public void init() throws Exception {
         super.init();
-        //this.theModel = new Model();
-        this.theView = new View(theModel);
-        this.theCtrl = new Controller(theModel, theView);
+        this.theView1 = new View();
+        this.theView2 = new View();
+        this.theModel = new Model(theView1, theView2);
+        this.theCtrl = new Controller(theModel, theView1);
     }
 
     @Override
     public void start(Stage primaryStage) throws Exception {
         // Now, set up the scene, and connect it to the stage!
-        Scene scene = new Scene(this.theView.getRoot(), 1500, 1500);
+        Scene scene = new Scene(this.theView1.getRoot(), 1500, 1500);
 
         primaryStage.setTitle("Battleship");
         primaryStage.setScene(scene);
