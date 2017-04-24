@@ -17,6 +17,7 @@ package GUI;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Orientation;
@@ -108,7 +109,7 @@ public class View {
      * @see
      * <a href="http://stackoverflow.com/questions/29984228/javafx-button-
      * background-image">http://stackoverflow.com/questions/29984228/javafx-
-     * button-background-image<\a>
+     * button-background-image</a>
      */
     public View(Model theModel) {
         this.theModel = theModel;
@@ -203,94 +204,104 @@ public class View {
                     @Override
                     public void handle(MouseEvent mouseevent) {
 
-                        if (r.getFill() != Paint.valueOf("GREY")) {
-                            r.setFill(Paint.valueOf("GREY"));
+                        int col = myBoard.getColumnIndex(r);
+                        int row = myBoard.getRowIndex(r);
+
+                        int[][] temp = null;
+
+                        if (carrierBtn.isSelected() && !(carrierBtn.isDisable())) {
+                            temp = new int[5][2];
+                            for (int i = 0; i < 5; i++) {
+                                int[] tempArray = {col + i, row};
+                                temp[i] = tempArray;
+                            }
+
+                            // Make the user lose the ability to select the carrier.
+                            carrierBtn.setDisable(true);
                         }
 
-                        else {
-                            int col = myBoard.getColumnIndex(r);
-                            int row = myBoard.getRowIndex(r);
-
-                            int[][] temp = null;
-
-                            if (carrierBtn.isSelected()) {
-                                temp = new int[5][2];
-                                for (int i = 0; i < 5; i++) {
-                                    int[] tempArray = {col + i, row};
-                                    temp[i] = tempArray;
-                                }
+                        else if (battleshipBtn.isSelected() && !(battleshipBtn.isDisable())) {
+                            temp = new int[4][2];
+                            for (int i = 0; i < 4; i++) {
+                                int[] tempArray = {col + i, row};
+                                temp[i] = tempArray;
                             }
 
-                            else if (battleshipBtn.isSelected()) {
-                                temp = new int[4][2];
-                                for (int i = 0; i < 4; i++) {
-                                    int[] tempArray = {col + i, row};
-                                    temp[i] = tempArray;
-                                }
-                            }
-
-                            else if (cruiserBtn.isSelected()) {
-                                temp = new int[3][2];
-                                for (int i = 0; i < 3; i++) {
-                                    int[] tempArray = {col + i, row};
-                                    temp[i] = tempArray;
-                                }
-                            }
-
-                            else if (submarineBtn.isSelected()) {
-                                temp = new int[3][2];
-                                for (int i = 0; i < 3; i++) {
-                                    int[] tempArray = {col + i, row};
-                                    temp[i] = tempArray;
-                                }
-                            }
-
-                            else if (destroyerBtn.isSelected()) {
-                                temp = new int[2][2];
-                                for (int i = 0; i < 2; i++) {
-                                    int[] tempArray = {col + i, row};
-                                    temp[i] = tempArray;
-                                }
-                            }
-
-                            ArrayList<int[]> shipLoc = new ArrayList<int[]>(
-                                    Arrays.asList(temp));
-
-                            Ship ship = null;
-
-                            if (carrierBtn.isSelected()) {
-                                ship = new Ship(shipLoc, CARRIER);
-                            }
-
-                            else if (battleshipBtn.isSelected()) {
-                                ship = new Ship(shipLoc, BATTLESHIP);
-                            }
-
-                            else if (cruiserBtn.isSelected()) {
-                                ship = new Ship(shipLoc, CRUISER);
-                            }
-
-                            else if (submarineBtn.isSelected()) {
-                                ship = new Ship(shipLoc, SUBMARINE);
-                            }
-
-                            else if (destroyerBtn.isSelected()) {
-                                ship = new Ship(shipLoc, DESTROYER);
-                            }
-
-                            try {
-                                buildShipMy(ship);
-                            } catch (Exception e) {
-                                // System.out.println(e.toString());
-                                Alert alert = new Alert(
-                                        Alert.AlertType.ERROR);
-                                alert.setTitle("Out of range!");
-                                alert.setHeaderText(
-                                        "Incorrect input specified!");
-                                alert.setContentText("Out of range!");
-                                alert.show();
-                            }
+                            // Make the user lose the ability to select the carrier.
+                            battleshipBtn.setDisable(true);
                         }
+
+                        else if (cruiserBtn.isSelected() && !(cruiserBtn.isDisable())) {
+                            temp = new int[3][2];
+                            for (int i = 0; i < 3; i++) {
+                                int[] tempArray = {col + i, row};
+                                temp[i] = tempArray;
+                            }
+
+                            // Make the user lose the ability to select the carrier.
+                            cruiserBtn.setDisable(true);
+                        }
+
+                        else if (submarineBtn.isSelected() && !(submarineBtn.isDisable())) {
+                            temp = new int[3][2];
+                            for (int i = 0; i < 3; i++) {
+                                int[] tempArray = {col + i, row};
+                                temp[i] = tempArray;
+                            }
+
+                            // Make the user lose the ability to select the carrier.
+                            submarineBtn.setDisable(true);
+                        }
+
+                        else if (destroyerBtn.isSelected() && !(destroyerBtn.isDisable())) {
+                            temp = new int[2][2];
+                            for (int i = 0; i < 2; i++) {
+                                int[] tempArray = {col + i, row};
+                                temp[i] = tempArray;
+                            }
+
+                            // Make the user lose the ability to select the carrier.
+                            destroyerBtn.setDisable(true);
+                        }
+
+                        ArrayList<int[]> shipLoc = new ArrayList<int[]>(
+                                Arrays.asList(temp));
+
+                        Ship ship = null;
+
+                        if (carrierBtn.isSelected()) {
+                            ship = new Ship(shipLoc, CARRIER);
+                        }
+
+                        else if (battleshipBtn.isSelected()) {
+                            ship = new Ship(shipLoc, BATTLESHIP);
+                        }
+
+                        else if (cruiserBtn.isSelected()) {
+                            ship = new Ship(shipLoc, CRUISER);
+                        }
+
+                        else if (submarineBtn.isSelected()) {
+                            ship = new Ship(shipLoc, SUBMARINE);
+                        }
+
+                        else if (destroyerBtn.isSelected()) {
+                            ship = new Ship(shipLoc, DESTROYER);
+                        }
+
+                        try {
+                            buildShipMy(ship);
+                        } catch (Exception e) {
+                            // System.out.println(e.toString());
+                            Alert alert = new Alert(
+                                    Alert.AlertType.ERROR);
+                            alert.setTitle("Out of range!");
+                            alert.setHeaderText(
+                                    "Incorrect input specified!");
+                            alert.setContentText("Out of range!");
+                            alert.show();
+                        }
+
                     }
                 });
             }
@@ -411,6 +422,29 @@ public class View {
             myBoard.getChildren().remove(r);
             r.setFill(Paint.valueOf(ship.getShipType().getColor()));
             myBoard.add(r, position[0], position[1]);
+        }
+
+        // Make the user lose the ability to select the toggle button for the ship.
+        ShipType shipType = ship.getShipType();
+
+        if (shipType == ShipType.CARRIER) {
+            this.theModel.setAddedCarrier(new SimpleBooleanProperty(true));
+        }
+
+        else if (shipType == ShipType.BATTLESHIP) {
+            this.theModel.setAddedBattleship(new SimpleBooleanProperty(true));
+        }
+
+        else if (shipType == ShipType.CRUISER) {
+            this.theModel.setAddedCruiser(new SimpleBooleanProperty(true));
+        }
+
+        else if (shipType == ShipType.SUBMARINE) {
+            this.theModel.setAddedSubmarine(new SimpleBooleanProperty(true));
+        }
+
+        else if (shipType == ShipType.DESTROYER) {
+            this.theModel.setAddedDestroyer(new SimpleBooleanProperty(true));
         }
     }
 
