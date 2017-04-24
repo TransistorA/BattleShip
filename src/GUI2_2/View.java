@@ -13,7 +13,7 @@
 *
 * ****************************************
  */
-package GUI;
+package GUI2_2;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -35,7 +35,11 @@ import javafx.scene.paint.Paint;
 import javafx.scene.shape.Rectangle;
 import ship.Ship;
 import ship.ShipType;
-import static ship.ShipType.*;
+import static ship.ShipType.BATTLESHIP;
+import static ship.ShipType.CARRIER;
+import static ship.ShipType.CRUISER;
+import static ship.ShipType.DESTROYER;
+import static ship.ShipType.SUBMARINE;
 
 /**
  * View part of the MVC design pattern.
@@ -45,10 +49,12 @@ import static ship.ShipType.*;
 public class View {
 
     // Create the boards.
-    public Rectangle[][] board = new Rectangle[10][10];
+    private Rectangle[][] board = new Rectangle[10][10];
     private Rectangle[][] enemyBoard = new Rectangle[10][10];
-    public GridPane myBoard;
+    private GridPane myBoard;
     private GridPane opponentBoard;
+
+    private Model theModel;
 
     private BorderPane root;
 
@@ -75,6 +81,8 @@ public class View {
      *
      * @author Joseph DiPalma
      *
+     * @param theModel Model object that handles all of the logic
+     *
      * The images used for the rotate buttons were found at the below website.
      *
      * @see
@@ -99,9 +107,11 @@ public class View {
      * @see
      * <a href="http://stackoverflow.com/questions/29984228/javafx-button-
      * background-image">http://stackoverflow.com/questions/29984228/javafx-
-     * button-background-image</a>
+     * button-background-image<\a>
      */
-    public View() {
+    public View(Model theModel) {
+        this.theModel = theModel;
+
         root = new BorderPane();
         root.setPadding(new Insets(15, 15, 15, 15));
         root.setPrefHeight(1500);
@@ -146,6 +156,9 @@ public class View {
         // Create all of the labels and buttons related to the ships.
         createShips();
 
+        // Update the ship when it is hit or rotated.
+        updateShip();
+
         // Set the ship type.
         carrierBtn.setUserData(new Ship(ShipType.CARRIER));
         battleshipBtn.setUserData(new Ship(ShipType.BATTLESHIP));
@@ -172,15 +185,14 @@ public class View {
 
         root.setCenter(grids);
 
-        Button haha = new Button("start game");
-        haha.setOnAction(new EventHandler<ActionEvent>() {
-
+        Button startGame = new Button("start game");
+        startGame.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                haha();
+                startGame();
             }
         });
-        grids.getChildren().add(haha);
+        grids.getChildren().add(startGame);
 
     }
 
@@ -434,18 +446,33 @@ public class View {
         }
     }
 
-    public void haha() {
+    public void startGame() {
+        int[][] board2 = new int[board.length][board.length];
         for (int i = 0; i < this.board.length; i++) {
-            for (Rectangle r : this.board[i]) {
-
+            for (int j = 0; j < this.board[0].length; j++) {
+                if (board[i][j].getFill() != Paint.valueOf("GREY")) {
+                    board2[i][j] = 1; // 1 represents ship area, 0 represents sea area
+                }
+                else {
+                    board2[i][j] = 0;
+                }
+            }
+        }
+        for (int i = 0; i < this.board.length; i++) {
+            for (int j = 0; j < this.board[0].length; j++) {
+                board[i][j].setFill(Paint.valueOf("GREY"));
+            }
+        }
+        for (int i = 0; i < this.board.length; i++) {
+            for (Rectangle r : board[i]) {
                 r.setOnMouseClicked(new EventHandler<MouseEvent>() {
                     @Override
                     public void handle(MouseEvent mouseevent) {
-
-                        if (r.getFill() != Paint.valueOf("GREY")) {
-                            r.setFill(Paint.valueOf("WHITE"));
+                        int col = myBoard.getColumnIndex(r);
+                        int row = myBoard.getRowIndex(r);
+                        if (board2[col][row] == 1) {
+                            r.setFill(Paint.valueOf("BLUE"));
                         }
-                        r.setFill(Paint.valueOf("GREY"));
                     }
                 });
 
