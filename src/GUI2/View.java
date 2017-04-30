@@ -20,7 +20,6 @@ import java.util.Arrays;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.ToggleGroup;
@@ -37,7 +36,7 @@ import static ship.ShipType.CRUISER;
 /**
  * View part of the MVC design pattern.
  *
- * @author Annan Miao
+ * @author Joseph DiPalma
  */
 public class View {
 
@@ -60,8 +59,6 @@ public class View {
     private RadioButton carrierBtn, battleshipBtn, cruiserBtn, submarineBtn, destroyerBtn;
     private RadioButton shipHorizontal, shipVertical;
     ToggleGroup shipGroup, shipDirection;
-
-    private Button playGame;
 
     /**
      * Constructor for the View class.
@@ -196,12 +193,12 @@ public class View {
                             }
 
                             else if (shipVertical.isSelected()) {
-                                int[][] temp = {{col, row}, {col, row + 1}, {col, row + 2}};
+                                int[][] temp = {{col, row}, {col + 1, row}, {col + 1, row}};
                                 ArrayList<int[]> shipLoc = new ArrayList<int[]>(
                                         Arrays.asList(temp));
                                 Ship ship = new Ship(shipLoc, CRUISER);
                                 try {
-                                    buildShipEnemy(ship);
+                                    rotateEnemy(ship);
                                 } catch (Exception e) {
                                     Alert alert = new Alert(
                                             Alert.AlertType.ERROR);
@@ -266,9 +263,6 @@ public class View {
 
         root.setCenter(grids);
 
-        playGame = new Button("Start the game!");
-        root.getChildren().add(playGame);
-
     }
 
     public BorderPane getRoot() {
@@ -312,6 +306,11 @@ public class View {
         }
     }
 
+    public void rotateMy(Ship ship) {
+        ship.rotateCCW();
+        buildShipMy(ship);
+    }
+
     public void buildShipEnemy(Ship ship) {
         for (int[] position : ship.getShipLoc()) {
             Rectangle r = enemyBoard[position[0]][position[1]];
@@ -319,6 +318,11 @@ public class View {
             r.setFill(Paint.valueOf("RED"));
             opponentBoard.add(r, position[0], position[1]);
         }
+    }
+
+    public void rotateEnemy(Ship ship) {
+        ship.rotateCCW();
+        buildShipEnemy(ship);
     }
 
 }

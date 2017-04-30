@@ -15,27 +15,31 @@
  */
 package GUI;
 
-import java.util.ArrayList;
-import java.util.Arrays;
+import javafx.animation.AnimationTimer;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.RadioButton;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.control.ToggleGroup;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.text.Font;
+import javafx.scene.text.Text;
+import javafx.util.Duration;
 import ship.Ship;
 import ship.ShipType;
-import static ship.ShipType.*;
 
 /**
  * View part of the MVC design pattern.
@@ -70,6 +74,26 @@ public class View {
     private Button rotateCWBtn;
     private Button rotateCCWBtn;
 
+    // Set up the buttons for selecting the orientation of the ship.
+    private RadioButton shipHorizontal;
+    private RadioButton shipVertical;
+    ToggleGroup orientationGroup;
+
+    // Set up the button for attacking.
+    private Button attackBtn;
+
+    // Set up the button for when the user is done selecting their ships.
+    private Button shipSelectionDone;
+
+    // Set up the timer for the player.
+    private AnimationTimer timer;
+    private Integer i = 60;
+    private Text timerText;
+    private Timeline timeline;
+    private EventHandler onFinished;
+    private KeyFrame keyFrame;
+    private Duration duration;
+
     /**
      * Constructor for the View class.
      *
@@ -100,6 +124,10 @@ public class View {
      * <a href="http://stackoverflow.com/questions/29984228/javafx-button-
      * background-image">http://stackoverflow.com/questions/29984228/javafx-
      * button-background-image</a>
+     *
+     * @see
+     * <a href="http://www.java2s.com/Tutorials/Java/JavaFX/1010__JavaFX_Timeline_Animation.htm">
+     * http://www.java2s.com/Tutorials/Java/JavaFX/1010__JavaFX_Timeline_Animation.htm</a>
      */
     public View() {
         root = new BorderPane();
@@ -117,27 +145,90 @@ public class View {
         opponentBoard = new GridPane();
         createEnemyBoard();
 
-        // Add the buttons for rotating CW and CCW.
-        /*bottomPane = new FlowPane(Orientation.HORIZONTAL);
+//        // Add the buttons for rotating CW and CCW.
+//        bottomPane = new FlowPane(Orientation.HORIZONTAL);
+//        bottomPane.setAlignment(Pos.BASELINE_CENTER);
+//        rotateCWBtn = new Button("Rotate ship clockwise");
+//        rotateCCWBtn = new Button("Rotate ship counterclockwise");
+//
+//        // Add the images to the rotate buttons.
+//        Image cwImage = new Image(
+//                getClass().getResource("/GUI/cwbtn.png").toExternalForm());
+//        ImageView cwImageView = new ImageView(cwImage);
+//        rotateCWBtn.setGraphic(cwImageView);
+//        Image ccwImage = new Image(
+//                getClass().getResource("/GUI/ccwbtn.png").toExternalForm());
+//        ImageView ccwImageView = new ImageView(ccwImage);
+//        rotateCCWBtn.setGraphic(ccwImageView);
+//
+//        bottomPane.getChildren().add(new Label("Rotate ship: "));
+//        bottomPane.getChildren().add(rotateCWBtn);
+//        bottomPane.getChildren().add(rotateCCWBtn);
+//        bottomPane.setHgap(10);
+//        root.setBottom(bottomPane);
+        // Create the buttons so the user can decide whether to place the ship
+        // with horizontal or vertical orientation.
+        shipHorizontal = new RadioButton("Horizontal");
+        shipVertical = new RadioButton("Vertical");
+        shipHorizontal.setSelected(true);
+
+        // Hold the orientation buttons in a toggle group.
+        orientationGroup = new ToggleGroup();
+        shipHorizontal.setToggleGroup(orientationGroup);
+        shipVertical.setToggleGroup(orientationGroup);
+
+        bottomPane = new FlowPane(Orientation.HORIZONTAL);
         bottomPane.setAlignment(Pos.BASELINE_CENTER);
-        rotateCWBtn = new Button("Rotate ship clockwise");
-        rotateCCWBtn = new Button("Rotate ship counterclockwise");
 
-        // Add the images to the rotate buttons.
-        Image cwImage = new Image(
-                getClass().getResource("/GUI/cwbtn.png").toExternalForm());
-        ImageView cwImageView = new ImageView(cwImage);
-        rotateCWBtn.setGraphic(cwImageView);
-        Image ccwImage = new Image(
-                getClass().getResource("/GUI/ccwbtn.png").toExternalForm());
-        ImageView ccwImageView = new ImageView(ccwImage);
-        rotateCCWBtn.setGraphic(ccwImageView);
+        Font font = new Font("Times New Roman", 24);
 
-        bottomPane.getChildren().add(new Label("Rotate ship: "));
-        bottomPane.getChildren().add(rotateCWBtn);
-        bottomPane.getChildren().add(rotateCCWBtn);
+        attackBtn = new Button("Attack");
+        attackBtn.setFont(font);
+        attackBtn.setDisable(true);
+
+        shipSelectionDone = new Button("Confirm ship selection");
+        shipSelectionDone.setFont(font);
+
+//        timer = new Timer(60);
+//        timer.countDown();
+//        Label timeLbl = timer.getLabel();
+        timeline = new Timeline();
+        timeline.setCycleCount(60);
+
+        timerText = new Text(i.toString());
+        timer = new AnimationTimer() {
+            @Override
+            public void handle(long now) {
+                timerText.setText(i.toString());
+                i--;
+            }
+        };
+
+        // When the timer reaches 0.
+        onFinished = new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                timeline.stop();
+
+                // Reset the timer.
+                i = 60;
+            }
+        };
+
+        duration = Duration.millis(60000);
+        keyFrame = new KeyFrame(duration, onFinished);
+
+        timeline.getKeyFrames().add(keyFrame);
+
+        //     timeline.play();
+        //   timer.start();
+        bottomPane.getChildren().add(attackBtn);
+        bottomPane.getChildren().add(shipSelectionDone);
+        bottomPane.getChildren().add(timerText);
         bottomPane.setHgap(10);
-        root.setBottom(bottomPane);*/
+        //bottomPane.getChildren().add(timer);
+        root.setBottom(bottomPane);
+
         // Add the pane for the user to select the ship.
         rightPane = new FlowPane(Orientation.VERTICAL);
         rightPane.setAlignment(Pos.CENTER_RIGHT);
@@ -160,6 +251,14 @@ public class View {
         rightPane.getChildren().add(submarineBtn);
         rightPane.getChildren().add(destroyerBtn);
 
+        // Add the label for the orientation.
+        rightPane.getChildren().add(new Label(
+                "Select the orientation of the ship:"));
+
+        // Add the buttons to select horizontal or vertical ship orientation.
+        rightPane.getChildren().add(shipHorizontal);
+        rightPane.getChildren().add(shipVertical);
+
         root.setRight(rightPane);
 
         // Add both boards to the center pane.
@@ -172,124 +271,6 @@ public class View {
 
         root.setCenter(grids);
 
-        Button haha = new Button("start game");
-        haha.setOnAction(new EventHandler<ActionEvent>() {
-
-            @Override
-            public void handle(ActionEvent event) {
-                haha();
-            }
-        });
-        grids.getChildren().add(haha);
-
-    }
-
-    /**
-     * Update the ship when it is rotated or hit.
-     *
-     * @author Joseph DiPalma
-     */
-    public void updateShip() {
-        // Create or rotate ship, or destroy ship when clicking on ship area
-        for (int i = 0; i < this.board.length; i++) {
-            for (Rectangle r : this.board[i]) {
-
-                r.setOnMouseClicked(new EventHandler<MouseEvent>() {
-                    @Override
-                    public void handle(MouseEvent mouseevent) {
-
-                        if (r.getFill() != Paint.valueOf("GREY")) {
-                            r.setFill(Paint.valueOf("GREY"));
-                        }
-
-                        else {
-                            int col = myBoard.getColumnIndex(r);
-                            int row = myBoard.getRowIndex(r);
-
-                            int[][] temp = null;
-
-                            if (carrierBtn.isSelected()) {
-                                temp = new int[5][2];
-                                for (int i = 0; i < 5; i++) {
-                                    int[] tempArray = {col + i, row};
-                                    temp[i] = tempArray;
-                                }
-                            }
-
-                            else if (battleshipBtn.isSelected()) {
-                                temp = new int[4][2];
-                                for (int i = 0; i < 4; i++) {
-                                    int[] tempArray = {col + i, row};
-                                    temp[i] = tempArray;
-                                }
-                            }
-
-                            else if (cruiserBtn.isSelected()) {
-                                temp = new int[3][2];
-                                for (int i = 0; i < 3; i++) {
-                                    int[] tempArray = {col + i, row};
-                                    temp[i] = tempArray;
-                                }
-                            }
-
-                            else if (submarineBtn.isSelected()) {
-                                temp = new int[3][2];
-                                for (int i = 0; i < 3; i++) {
-                                    int[] tempArray = {col + i, row};
-                                    temp[i] = tempArray;
-                                }
-                            }
-
-                            else if (destroyerBtn.isSelected()) {
-                                temp = new int[2][2];
-                                for (int i = 0; i < 2; i++) {
-                                    int[] tempArray = {col + i, row};
-                                    temp[i] = tempArray;
-                                }
-                            }
-
-                            ArrayList<int[]> shipLoc = new ArrayList<int[]>(
-                                    Arrays.asList(temp));
-
-                            Ship ship = null;
-
-                            if (carrierBtn.isSelected()) {
-                                ship = new Ship(shipLoc, CARRIER);
-                            }
-
-                            else if (battleshipBtn.isSelected()) {
-                                ship = new Ship(shipLoc, BATTLESHIP);
-                            }
-
-                            else if (cruiserBtn.isSelected()) {
-                                ship = new Ship(shipLoc, CRUISER);
-                            }
-
-                            else if (submarineBtn.isSelected()) {
-                                ship = new Ship(shipLoc, SUBMARINE);
-                            }
-
-                            else if (destroyerBtn.isSelected()) {
-                                ship = new Ship(shipLoc, DESTROYER);
-                            }
-
-                            try {
-                                buildShipMy(ship);
-                            } catch (Exception e) {
-                                // System.out.println(e.toString());
-                                /*Alert alert = new Alert(
-                                        Alert.AlertType.ERROR);
-                                alert.setTitle("Out of range!");
-                                alert.setHeaderText(
-                                        "Incorrect input specified!");
-                                alert.setContentText("Out of range!");
-                                alert.show();*/
-                            }
-                        }
-                    }
-                });
-            }
-        }
     }
 
     /**
@@ -361,6 +342,23 @@ public class View {
         }
     }
 
+    public void showWinOrLoss(String winOrLoss) {
+        Alert alert = new Alert(AlertType.INFORMATION);
+        alert.setTitle("Game Over");
+        alert.setHeaderText(null);
+        alert.setContentText("You " + winOrLoss + "!");
+        alert.show();
+    }
+
+    public void showShipSelectionError() {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle("Ship Error");
+        alert.setHeaderText("Ship Selection Error");
+        alert.setContentText(
+                "Add the rest of your ships before continuing!");
+        alert.show();
+    }
+
     public BorderPane getRoot() {
         return root;
     }
@@ -393,63 +391,32 @@ public class View {
         return enemyBoard;
     }
 
-    /**
-     * Build the ship in the GUI corresponding to the Ship object.
-     *
-     * @author Annan Miao
-     *
-     * @param ship Ship object to build in the GUI
-     */
-    public void buildShipMy(Ship ship) {
-        for (int[] position : ship.getShipLoc()) {
-            if (position[0] > board.length - 1 || position[1] > board.length - 1) {
-                Alert alert = new Alert(
-                        Alert.AlertType.ERROR);
-                alert.setTitle("Ship Location Error");
-                alert.setHeaderText(
-                        "Ship out of board range!");
-                alert.setContentText(
-                        "You cannot set ship here!");
-                alert.show();
-                return;
-            }
-            if (board[position[0]][position[1]].getFill() != Paint.valueOf(
-                    "GREY")) {
-                Alert alert = new Alert(
-                        Alert.AlertType.ERROR);
-                alert.setTitle("Ship Location Error");
-                alert.setHeaderText(
-                        "Ship cannot overlap!");
-                alert.setContentText(
-                        "You cannot set ship here!");
-                alert.show();
-                return;
-            }
-        }
-        for (int[] position : ship.getShipLoc()) {
-            Rectangle r = board[position[0]][position[1]];
-            myBoard.getChildren().remove(r);
-            r.setFill(Paint.valueOf(ship.getShipType().getColor()));
-            myBoard.add(r, position[0], position[1]);
-        }
+    public GridPane getMyBoard() {
+        return myBoard;
     }
 
-    public void haha() {
-        for (int i = 0; i < this.board.length; i++) {
-            for (Rectangle r : this.board[i]) {
-
-                r.setOnMouseClicked(new EventHandler<MouseEvent>() {
-                    @Override
-                    public void handle(MouseEvent mouseevent) {
-
-                        if (r.getFill() != Paint.valueOf("GREY")) {
-                            r.setFill(Paint.valueOf("WHITE"));
-                        }
-                        r.setFill(Paint.valueOf("GREY"));
-                    }
-                });
-
-            }
-        }
+    public Button getAttackBtn() {
+        return attackBtn;
     }
+
+    public Button getShipSelectionDone() {
+        return shipSelectionDone;
+    }
+
+    public RadioButton getShipHorizontal() {
+        return shipHorizontal;
+    }
+
+    public RadioButton getShipVertical() {
+        return shipVertical;
+    }
+
+    public AnimationTimer getTimer() {
+        return timer;
+    }
+
+    public Timeline getTimeline() {
+        return timeline;
+    }
+
 }

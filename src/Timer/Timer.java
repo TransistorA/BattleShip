@@ -15,39 +15,52 @@
  */
 package Timer;
 
-import javafx.concurrent.Task;
-import javafx.scene.control.Label;
+import javafx.animation.AnimationTimer;
 
-/**
- *
- * @author computer
- */
-public class Timer extends Task<Integer> {
-
-    private int time;
-
-    private Label timeLbl;
-
-    public Timer(int totalTime) {
-        this.time = totalTime;
-    }
-
-    public void setLabel(Label lbl) {
-        this.timeLbl = lbl;
-    }
-
-    public void countDown() {
-        while (this.time > 0) {
-            time -= 1;
-            this.timeLbl.setText(Integer.toString(time));
-        }
-    }
+///**
+// *
+// * @author computer
+// */
+//public class Timer extends Task<Integer> {
+//
+//    private int time;
+//
+//    private Label timeLbl;
+//
+//    public Timer(int totalTime) {
+//        this.time = totalTime;
+//        this.timeLbl = new Label("");
+//    }
+//
+//    public void setLabel(Label lbl) {
+//        this.timeLbl = lbl;
+//    }
+//
+//    public void countDown() {
+//        while (this.time > 0) {
+//            System.out.println(Integer.toString(time));
+//            time -= 1;
+//            this.timeLbl.setText(Integer.toString(time));
+//        }
+//    }
+//
+//    public Label getLabel() {
+//        return this.timeLbl;
+//    }
+//
+//    @Override
+//    protected Integer call() throws Exception {
+//        this.countDown();
+//        return this.time;
+//
+//    }
+//
+//}
+public class Timer extends AnimationTimer {
 
     @Override
-    protected Integer call() throws Exception {
-        this.countDown();
-        return this.time;
-
+    public void handle(long now) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
 }

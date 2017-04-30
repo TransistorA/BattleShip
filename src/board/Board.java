@@ -16,7 +16,6 @@
 package board;
 
 import java.util.Arrays;
-import player.Player;
 
 /**
  * The representation of the Board object
@@ -48,6 +47,10 @@ public class Board {
         }
     }
 
+    public int[][] getBoard() {
+        return board;
+    }
+
     /**
      * Update the board after an attack.
      *
@@ -57,6 +60,7 @@ public class Board {
      * location
      */
     public void updateBoard(int[] loc) {
+        //System.out.println(Arrays.toString(loc));
         this.board[loc[0]][loc[1]] = 1;
     }
 
@@ -76,21 +80,20 @@ public class Board {
         return strBoard;
     }
 
-    public static void main(String[] argus) {
-        Board testBoard = new Board(10);
-        System.out.println(testBoard.toString());
-        int[] loc = {1, 2};
-        testBoard.updateBoard(loc);
-        System.out.println(testBoard.toString());
-
-        Player p1 = new Player();
-        Player p2 = new Player();
-
-        //ship loc
-        int[] initLoc1 = {1, 2};
-        int[] initLoc2 = {2, 2};
-        int[] initLoc3 = {3, 2};
-
-    }
-
+//    public static void main(String[] argus) {
+//        Board testBoard = new Board(10);
+//        System.out.println(testBoard.toString());
+//        int[] loc = {1, 2};
+//        testBoard.updateBoard(loc);
+//        System.out.println(testBoard.toString());
+//
+//        Player p1 = new Player();
+//        Player p2 = new Player();
+//
+//        //ship loc
+//        int[] initLoc1 = {1, 2};
+//        int[] initLoc2 = {2, 2};
+//        int[] initLoc3 = {3, 2};
+//
+//    }
 }

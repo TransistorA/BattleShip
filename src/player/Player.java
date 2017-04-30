@@ -15,6 +15,7 @@
  */
 package player;
 
+import GUI.View;
 import board.Board;
 import java.util.ArrayList;
 import ship.Ship;
@@ -51,18 +52,40 @@ public class Player {
     // Keeps track of how many ships remain for the player.
     private int shipRemain;
 
+    private View myView;
+
+    // Keep track if all of the ships have been added.
+    private boolean shipsAdded;
+
+    // Keep track of which ships have been added.
+    private boolean carrierAdded = false;
+    private boolean battleshipAdded = false;
+    private boolean cruiserAdded = false;
+    private boolean destroyerAdded = false;
+    private boolean submarineAdded = false;
+
     /**
      * Constructor for the Player class.
      *
      * @author Ben Xu
      */
-    public Player() {
+    public Player(View view) {
         this.initIndex = 0;
         //init constants
         this.SHIP_CONFIG = new int[]{1, 1, 1, 1, 1};
         this.TOTAL_SHIPS = 5;
+        //this.shipRemain = 5;
+        this.shipRemain = 0;
+
         // Add all of the ShipType types.
         this.TYPES = new ShipType[]{ShipType.CARRIER, ShipType.BATTLESHIP, ShipType.CRUISER, ShipType.SUBMARINE, ShipType.DESTROYER};
+
+        this.myView = view;
+
+        this.shipsAdded = false;
+
+        this.myBoard = new Board(10);
+        this.targetBoard = new Board(10);
 
         // Initialize the array of ships.
         this.myShips = new ArrayList<>();
@@ -80,6 +103,10 @@ public class Player {
                 myShips.add(new Ship(TYPES[i]));
             }
         }
+    }
+
+    public View getMyView() {
+        return myView;
     }
 
     /**
@@ -186,5 +213,40 @@ public class Player {
 
         }
         return false;
+    }
+
+    public Board getMyBoard() {
+        return myBoard;
+    }
+
+    public void shipsAddedTrue() {
+        this.shipsAdded = false;
+        if (this.battleshipAdded && this.carrierAdded && this.cruiserAdded && this.destroyerAdded && this.submarineAdded) {
+            this.shipsAdded = true;
+        }
+    }
+
+    public boolean getShipsAdded() {
+        return this.shipsAdded;
+    }
+
+    public void addedCarrier() {
+        this.carrierAdded = true;
+    }
+
+    public void addedBattleship() {
+        this.battleshipAdded = true;
+    }
+
+    public void addedSubmarine() {
+        this.submarineAdded = true;
+    }
+
+    public void addedDestroyer() {
+        this.destroyerAdded = true;
+    }
+
+    public void addedCruiser() {
+        this.cruiserAdded = true;
     }
 }
