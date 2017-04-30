@@ -130,18 +130,17 @@ public class GameStartView extends Application {
                     @Override
                     public void run() {
                         mainServer = new Server();
-                        if (mainServer.hostSocket.isConnected()) {
-                            System.out.println("CONNECTED!");
-                            //run the model here
-                            //display View 1
-                            theModel.showGUI(p1);
-                        }
-
                     }
 
                 };
                 Thread ServerThread = new Thread(serverTask);
                 ServerThread.start();
+                if (mainServer.hostSocket.isConnected()) {
+                    System.out.println("CONNECTED!");
+                    //run the model here
+                    //display View 1
+                    theModel.showGUI(p1);
+                }
             }
         });
 
@@ -167,17 +166,18 @@ public class GameStartView extends Application {
                             @Override
                             public void run() {
                                 mainClient = new Client(ipInput.getText());
-                                if (mainClient.getClientSocket().isConnected()) {
-                                    System.out.println("CONNECTED!");
-
-                                    //model go here
-                                    theModel.showGUI(p2);
-                                }
                             }
 
                         };
                         Thread clientThread = new Thread(clientTask);
                         clientThread.start();
+
+                        if (mainClient.getClientSocket().isConnected()) {
+                            System.out.println("CONNECTED!");
+
+                            //model go here
+                            theModel.showGUI(p2);
+                        }
                     }
                 });
 

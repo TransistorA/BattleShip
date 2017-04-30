@@ -1,17 +1,17 @@
 /* *****************************************
-* CSCI205 - Software Engineering and Design
-* Spring 2017
-*
-* Name: Joseph DiPalma, Annan Miao, and Ben Xu
-* Date: Apr 12, 2017
-* Time: 12:58:40 AM
-*
-* Project: csci205finalproject
-* Package: ship
-* File: shipType
-* Description:
-*
-* ****************************************
+ * CSCI205 - Software Engineering and Design
+ * Spring 2017
+ *
+ * Name: Joseph DiPalma, Annan Miao, and Ben Xu
+ * Date: Apr 12, 2017
+ * Time: 12:58:40 AM
+ *
+ * Project: csci205finalproject
+ * Package: ship
+ * File: shipType
+ * Description:
+ *
+ * ****************************************
  */
 package ship;
 
