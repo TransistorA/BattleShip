@@ -15,20 +15,29 @@
  */
 package GUI;
 
+import javafx.animation.AnimationTimer;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.RadioButton;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.control.ToggleGroup;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.text.Font;
+import javafx.scene.text.Text;
+import javafx.util.Duration;
 import ship.Ship;
 import ship.ShipType;
 
@@ -65,6 +74,26 @@ public class View {
     private Button rotateCWBtn;
     private Button rotateCCWBtn;
 
+    // Set up the buttons for selecting the orientation of the ship.
+    private RadioButton shipHorizontal;
+    private RadioButton shipVertical;
+    ToggleGroup orientationGroup;
+
+    // Set up the button for attacking.
+    private Button attackBtn;
+
+    // Set up the button for when the user is done selecting their ships.
+    private Button shipSelectionDone;
+
+    // Set up the timer for the player.
+    private AnimationTimer timer;
+    private Integer i = 60;
+    private Text timerText;
+    private Timeline timeline;
+    private EventHandler onFinished;
+    private KeyFrame keyFrame;
+    private Duration duration;
+
     /**
      * Constructor for the View class.
      *
@@ -95,6 +124,10 @@ public class View {
      * <a href="http://stackoverflow.com/questions/29984228/javafx-button-
      * background-image">http://stackoverflow.com/questions/29984228/javafx-
      * button-background-image</a>
+     *
+     * @see
+     * <a href="http://www.java2s.com/Tutorials/Java/JavaFX/1010__JavaFX_Timeline_Animation.htm">
+     * http://www.java2s.com/Tutorials/Java/JavaFX/1010__JavaFX_Timeline_Animation.htm</a>
      */
     public View() {
         root = new BorderPane();
@@ -112,26 +145,88 @@ public class View {
         opponentBoard = new GridPane();
         createEnemyBoard();
 
-        // Add the buttons for rotating CW and CCW.
+//        // Add the buttons for rotating CW and CCW.
+//        bottomPane = new FlowPane(Orientation.HORIZONTAL);
+//        bottomPane.setAlignment(Pos.BASELINE_CENTER);
+//        rotateCWBtn = new Button("Rotate ship clockwise");
+//        rotateCCWBtn = new Button("Rotate ship counterclockwise");
+//
+//        // Add the images to the rotate buttons.
+//        Image cwImage = new Image(
+//                getClass().getResource("/GUI/cwbtn.png").toExternalForm());
+//        ImageView cwImageView = new ImageView(cwImage);
+//        rotateCWBtn.setGraphic(cwImageView);
+//        Image ccwImage = new Image(
+//                getClass().getResource("/GUI/ccwbtn.png").toExternalForm());
+//        ImageView ccwImageView = new ImageView(ccwImage);
+//        rotateCCWBtn.setGraphic(ccwImageView);
+//
+//        bottomPane.getChildren().add(new Label("Rotate ship: "));
+//        bottomPane.getChildren().add(rotateCWBtn);
+//        bottomPane.getChildren().add(rotateCCWBtn);
+//        bottomPane.setHgap(10);
+//        root.setBottom(bottomPane);
+        // Create the buttons so the user can decide whether to place the ship
+        // with horizontal or vertical orientation.
+        shipHorizontal = new RadioButton("Horizontal");
+        shipVertical = new RadioButton("Vertical");
+        shipHorizontal.setSelected(true);
+
+        // Hold the orientation buttons in a toggle group.
+        orientationGroup = new ToggleGroup();
+        shipHorizontal.setToggleGroup(orientationGroup);
+        shipVertical.setToggleGroup(orientationGroup);
+
         bottomPane = new FlowPane(Orientation.HORIZONTAL);
         bottomPane.setAlignment(Pos.BASELINE_CENTER);
-        rotateCWBtn = new Button("Rotate ship clockwise");
-        rotateCCWBtn = new Button("Rotate ship counterclockwise");
 
-        // Add the images to the rotate buttons.
-        Image cwImage = new Image(
-                getClass().getResource("/GUI/cwbtn.png").toExternalForm());
-        ImageView cwImageView = new ImageView(cwImage);
-        rotateCWBtn.setGraphic(cwImageView);
-        Image ccwImage = new Image(
-                getClass().getResource("/GUI/ccwbtn.png").toExternalForm());
-        ImageView ccwImageView = new ImageView(ccwImage);
-        rotateCCWBtn.setGraphic(ccwImageView);
+        Font font = new Font("Times New Roman", 24);
 
-        bottomPane.getChildren().add(new Label("Rotate ship: "));
-        bottomPane.getChildren().add(rotateCWBtn);
-        bottomPane.getChildren().add(rotateCCWBtn);
+        attackBtn = new Button("Attack");
+        attackBtn.setFont(font);
+        attackBtn.setDisable(true);
+
+        shipSelectionDone = new Button("Confirm ship selection");
+        shipSelectionDone.setFont(font);
+
+//        timer = new Timer(60);
+//        timer.countDown();
+//        Label timeLbl = timer.getLabel();
+        timeline = new Timeline();
+        timeline.setCycleCount(60);
+
+        timerText = new Text(i.toString());
+        timer = new AnimationTimer() {
+            @Override
+            public void handle(long now) {
+                timerText.setText(i.toString());
+                i--;
+            }
+        };
+
+        // When the timer reaches 0.
+        onFinished = new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                timeline.stop();
+
+                // Reset the timer.
+                i = 60;
+            }
+        };
+
+        duration = Duration.millis(60000);
+        keyFrame = new KeyFrame(duration, onFinished);
+
+        timeline.getKeyFrames().add(keyFrame);
+
+        //     timeline.play();
+        //   timer.start();
+        bottomPane.getChildren().add(attackBtn);
+        bottomPane.getChildren().add(shipSelectionDone);
+        bottomPane.getChildren().add(timerText);
         bottomPane.setHgap(10);
+        //bottomPane.getChildren().add(timer);
         root.setBottom(bottomPane);
 
         // Add the pane for the user to select the ship.
@@ -155,6 +250,14 @@ public class View {
         rightPane.getChildren().add(cruiserBtn);
         rightPane.getChildren().add(submarineBtn);
         rightPane.getChildren().add(destroyerBtn);
+
+        // Add the label for the orientation.
+        rightPane.getChildren().add(new Label(
+                "Select the orientation of the ship:"));
+
+        // Add the buttons to select horizontal or vertical ship orientation.
+        rightPane.getChildren().add(shipHorizontal);
+        rightPane.getChildren().add(shipVertical);
 
         root.setRight(rightPane);
 
@@ -239,6 +342,23 @@ public class View {
         }
     }
 
+    public void showWinOrLoss(String winOrLoss) {
+        Alert alert = new Alert(AlertType.INFORMATION);
+        alert.setTitle("Game Over");
+        alert.setHeaderText(null);
+        alert.setContentText("You " + winOrLoss + "!");
+        alert.show();
+    }
+
+    public void showShipSelectionError() {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle("Ship Error");
+        alert.setHeaderText("Ship Selection Error");
+        alert.setContentText(
+                "Add the rest of your ships before continuing!");
+        alert.show();
+    }
+
     public BorderPane getRoot() {
         return root;
     }
@@ -273,6 +393,30 @@ public class View {
 
     public GridPane getMyBoard() {
         return myBoard;
+    }
+
+    public Button getAttackBtn() {
+        return attackBtn;
+    }
+
+    public Button getShipSelectionDone() {
+        return shipSelectionDone;
+    }
+
+    public RadioButton getShipHorizontal() {
+        return shipHorizontal;
+    }
+
+    public RadioButton getShipVertical() {
+        return shipVertical;
+    }
+
+    public AnimationTimer getTimer() {
+        return timer;
+    }
+
+    public Timeline getTimeline() {
+        return timeline;
     }
 
 }

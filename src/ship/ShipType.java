@@ -16,8 +16,9 @@
 package ship;
 
 public enum ShipType {
-    CARRIER(5, "RED"), BATTLESHIP(4, "BLUE"), CRUISER(3, "GREEN"), SUBMARINE(3,
-                                                                             "ORANGE"), DESTROYER(
+    CARRIER(5, "PURPLE"), BATTLESHIP(4, "BLUE"), CRUISER(3, "GREEN"), SUBMARINE(
+            3,
+            "ORANGE"), DESTROYER(
             2, "YELLOW");
 
     public int size;
