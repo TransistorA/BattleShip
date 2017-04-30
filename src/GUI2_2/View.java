@@ -17,6 +17,7 @@ package GUI2_2;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Random;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
@@ -75,6 +76,11 @@ public class View {
     private FlowPane bottomPane;
     private Button rotateCWBtn;
     private Button rotateCCWBtn;
+
+    // If the previous hit by the computer hit the ship
+    private boolean preClick = false;
+    // The previous click location
+    private int[] preColRow = new int[2];
 
     /**
      * Constructor for the View class.
@@ -202,7 +208,7 @@ public class View {
      * @author Joseph DiPalma
      */
     public void updateShip() {
-        // Create or rotate ship, or destroy ship when clicking on ship area
+        // Create ship when clicked
         for (int i = 0; i < this.board.length; i++) {
             for (Rectangle r : this.board[i]) {
 
@@ -210,94 +216,93 @@ public class View {
                     @Override
                     public void handle(MouseEvent mouseevent) {
 
-                        if (r.getFill() != Paint.valueOf("GREY")) {
+                        /*if (r.getFill() != Paint.valueOf("GREY")) {
                             r.setFill(Paint.valueOf("GREY"));
+                        }*/
+                        //else {
+                        int col = myBoard.getColumnIndex(r);
+                        int row = myBoard.getRowIndex(r);
+
+                        int[][] temp = null;
+
+                        if (carrierBtn.isSelected()) {
+                            temp = new int[5][2];
+                            for (int i = 0; i < 5; i++) {
+                                int[] tempArray = {col + i, row};
+                                temp[i] = tempArray;
+                            }
                         }
 
-                        else {
-                            int col = myBoard.getColumnIndex(r);
-                            int row = myBoard.getRowIndex(r);
-
-                            int[][] temp = null;
-
-                            if (carrierBtn.isSelected()) {
-                                temp = new int[5][2];
-                                for (int i = 0; i < 5; i++) {
-                                    int[] tempArray = {col + i, row};
-                                    temp[i] = tempArray;
-                                }
+                        else if (battleshipBtn.isSelected()) {
+                            temp = new int[4][2];
+                            for (int i = 0; i < 4; i++) {
+                                int[] tempArray = {col + i, row};
+                                temp[i] = tempArray;
                             }
+                        }
 
-                            else if (battleshipBtn.isSelected()) {
-                                temp = new int[4][2];
-                                for (int i = 0; i < 4; i++) {
-                                    int[] tempArray = {col + i, row};
-                                    temp[i] = tempArray;
-                                }
+                        else if (cruiserBtn.isSelected()) {
+                            temp = new int[3][2];
+                            for (int i = 0; i < 3; i++) {
+                                int[] tempArray = {col + i, row};
+                                temp[i] = tempArray;
                             }
+                        }
 
-                            else if (cruiserBtn.isSelected()) {
-                                temp = new int[3][2];
-                                for (int i = 0; i < 3; i++) {
-                                    int[] tempArray = {col + i, row};
-                                    temp[i] = tempArray;
-                                }
+                        else if (submarineBtn.isSelected()) {
+                            temp = new int[3][2];
+                            for (int i = 0; i < 3; i++) {
+                                int[] tempArray = {col + i, row};
+                                temp[i] = tempArray;
                             }
+                        }
 
-                            else if (submarineBtn.isSelected()) {
-                                temp = new int[3][2];
-                                for (int i = 0; i < 3; i++) {
-                                    int[] tempArray = {col + i, row};
-                                    temp[i] = tempArray;
-                                }
+                        else if (destroyerBtn.isSelected()) {
+                            temp = new int[2][2];
+                            for (int i = 0; i < 2; i++) {
+                                int[] tempArray = {col + i, row};
+                                temp[i] = tempArray;
                             }
+                        }
 
-                            else if (destroyerBtn.isSelected()) {
-                                temp = new int[2][2];
-                                for (int i = 0; i < 2; i++) {
-                                    int[] tempArray = {col + i, row};
-                                    temp[i] = tempArray;
-                                }
-                            }
+                        ArrayList<int[]> shipLoc = new ArrayList<int[]>(
+                                Arrays.asList(temp));
 
-                            ArrayList<int[]> shipLoc = new ArrayList<int[]>(
-                                    Arrays.asList(temp));
+                        Ship ship = null;
 
-                            Ship ship = null;
+                        if (carrierBtn.isSelected()) {
+                            ship = new Ship(shipLoc, CARRIER);
+                        }
 
-                            if (carrierBtn.isSelected()) {
-                                ship = new Ship(shipLoc, CARRIER);
-                            }
+                        else if (battleshipBtn.isSelected()) {
+                            ship = new Ship(shipLoc, BATTLESHIP);
+                        }
 
-                            else if (battleshipBtn.isSelected()) {
-                                ship = new Ship(shipLoc, BATTLESHIP);
-                            }
+                        else if (cruiserBtn.isSelected()) {
+                            ship = new Ship(shipLoc, CRUISER);
+                        }
 
-                            else if (cruiserBtn.isSelected()) {
-                                ship = new Ship(shipLoc, CRUISER);
-                            }
+                        else if (submarineBtn.isSelected()) {
+                            ship = new Ship(shipLoc, SUBMARINE);
+                        }
 
-                            else if (submarineBtn.isSelected()) {
-                                ship = new Ship(shipLoc, SUBMARINE);
-                            }
+                        else if (destroyerBtn.isSelected()) {
+                            ship = new Ship(shipLoc, DESTROYER);
+                        }
 
-                            else if (destroyerBtn.isSelected()) {
-                                ship = new Ship(shipLoc, DESTROYER);
-                            }
-
-                            try {
-                                buildShipMy(ship);
-                            } catch (Exception e) {
-                                // System.out.println(e.toString());
-                                /*Alert alert = new Alert(
+                        try {
+                            buildShipMy(ship);
+                        } catch (Exception e) {
+                            // System.out.println(e.toString());
+                            /*Alert alert = new Alert(
                                         Alert.AlertType.ERROR);
                                 alert.setTitle("Out of range!");
                                 alert.setHeaderText(
                                         "Incorrect input specified!");
                                 alert.setContentText("Out of range!");
                                 alert.show();*/
-                            }
                         }
+                        //}
                     }
                 });
             }
@@ -447,6 +452,16 @@ public class View {
     }
 
     public void startGame() {
+
+        enemyBoard[5][5].setFill(Paint.valueOf("RED"));
+        enemyBoard[5][6].setFill(Paint.valueOf("RED"));
+        enemyBoard[5][7].setFill(Paint.valueOf("RED"));
+        enemyBoard[5][8].setFill(Paint.valueOf("RED"));
+        enemyBoard[1][5].setFill(Paint.valueOf("RED"));
+        enemyBoard[2][5].setFill(Paint.valueOf("RED"));
+        enemyBoard[3][5].setFill(Paint.valueOf("RED"));
+
+        // create a new 2d array of rectangles and copy the current player board
         int[][] board2 = new int[board.length][board.length];
         for (int i = 0; i < this.board.length; i++) {
             for (int j = 0; j < this.board[0].length; j++) {
@@ -458,11 +473,15 @@ public class View {
                 }
             }
         }
+
+        // clear the board
         for (int i = 0; i < this.board.length; i++) {
             for (int j = 0; j < this.board[0].length; j++) {
                 board[i][j].setFill(Paint.valueOf("GREY"));
             }
         }
+
+        // change color if you hit a ship
         for (int i = 0; i < this.board.length; i++) {
             for (Rectangle r : board[i]) {
                 r.setOnMouseClicked(new EventHandler<MouseEvent>() {
@@ -473,10 +492,86 @@ public class View {
                         if (board2[col][row] == 1) {
                             r.setFill(Paint.valueOf("BLUE"));
                         }
+
+                        if (preClick == false) {
+                            Random random = new Random();
+                            int i = random.nextInt(9 + 1 - 0) + 0;
+                            int j = random.nextInt(9 + 1 - 0) + 0;
+                            preColRow = click(i, j);
+                        }
+                        else {
+                            int i = preColRow[0];
+                            int j = preColRow[1];
+                            preColRow = click(i, j); ////// SEE HERE!!!!!!!
+                        }
                     }
                 });
-
             }
         }
+    }
+
+    public void clearBoard() {
+        for (int i = 0; i < this.board.length; i++) {
+            for (int j = 0; j < this.board[0].length; j++) {
+                board[i][j].setFill(Paint.valueOf("GREY"));
+            }
+        }
+    }
+
+    /**
+     *
+     * @param pcol the previous col
+     * @param prow the previous row
+     * @return the location of the current click
+     */
+    public int[] click(int pcol, int prow) {
+        Rectangle r;
+        int col, row;
+        int range = board.length;
+        // the previous click hits a ship
+        if (preClick = true) {
+            if (pcol == range - 1 && prow == range - 1) {
+                r = enemyBoard[pcol - 1][prow];
+                col = pcol - 1;
+                row = prow;
+            }
+            else if (pcol == range - 1 && prow < range - 1) {
+                r = enemyBoard[pcol - 1][prow];
+                col = pcol - 1;
+                row = prow;
+            }
+            else if (pcol < range - 1 && prow == range - 1) {
+                r = enemyBoard[pcol][prow - 1];
+                col = pcol;
+                row = prow - 1;
+            }
+            r = enemyBoard[pcol + 1][prow];
+            col = pcol + 1;
+            row = prow;
+        }
+        // the previous click doesn't hit a ship
+        else {
+            Random random = new Random();
+            col = random.nextInt(9 + 1 - 0) + 0;
+            row = random.nextInt(9 + 1 - 0) + 0;
+            r = enemyBoard[col][row];
+        }
+
+        // grey means unclicked and not ship, white means clicked and not ship, black means clicked and ship,
+        // other colors are ship and unclicked
+        if (r.getFill() != Paint.valueOf("GREY") && r.getFill() != Paint.valueOf(
+                "WHITE") && r.getFill() != Paint.valueOf("WHITE")) {
+            r.setFill(Paint.valueOf("BLACK"));
+            preClick = false;
+        }
+        else {
+            r.setFill(Paint.valueOf("WHITE"));
+            preClick = true;
+        }
+
+        int[] result = new int[2];
+        result[0] = col;
+        result[1] = row;
+        return result;
     }
 }
