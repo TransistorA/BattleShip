@@ -50,13 +50,6 @@ public class Controller implements EventHandler<ActionEvent> {
         this.theView1 = this.theModel.getP1View();
         this.theView2 = this.theModel.getP2View();
 
-        // This is all things that haven't been put in View yet but will be
-        // in the future.
-        /*
-        this.theView.getRotateCWButton().setOnAction(this);
-        this.theView.getRotateCCWButton().setOnAction(this);
-         */
-        // View 1.
         this.theModel.getCarrier().bind(
                 this.theView1.getCarrierBtn().selectedProperty());
         this.theModel.getBattleship().bind(
@@ -228,13 +221,13 @@ public class Controller implements EventHandler<ActionEvent> {
                         int col = theView1.getOpponentBoard().getColumnIndex(r);
                         int row = theView1.getOpponentBoard().getRowIndex(r);
                         if (board2[col][row] == 1) {
-                            r.setFill(Paint.valueOf("BLACK")); // hit sound here
-                            location = click(location[0], location[1]);
+                            r.setFill(Paint.valueOf("DARKRED")); // hit sound here
+                            click();
                             checkWin();
                         }
                         else {
                             r.setFill(Paint.valueOf("LIGHTGREY"));
-                            location = click(location[0], location[1]);
+                            click();
                             checkWin();
                         }
                     }
@@ -244,48 +237,28 @@ public class Controller implements EventHandler<ActionEvent> {
     }
 
     /**
-     * Use black for clicked ship, grey for unclicked area,lightgrey for clicked
-     * area other colors for unclicked ship
+     * Use DARKRED for clicked ship, grey for unclicked area,lightgrey for
+     * clicked area other colors for unclicked ship
      *
-     * @param pcol previous enemy click col
-     * @param prow previous enemy click row
+     *
      * @return updated click location(col,row)
      */
-    public int[] click(int pcol, int prow) {
+    public void click() {
         Rectangle r;
         int col, row;
-        int range = theView1.getBoard().length;
-        // the previous click hits a ship
-        /*if (theView1.getBoard()[pcol][prow].getFill() == Paint.valueOf("BLACK")) {
-            if (pcol == range - 1) {
-                r = theView1.getBoard()[pcol - 1][prow];
-                col = pcol - 1;
-                row = prow;
-            }
-            else if (prow == range - 1) {
-                r = theView1.getBoard()[pcol][prow - 1];
-                col = pcol;
-                row = prow - 1;
-            }
-            r = theView1.getBoard()[pcol + 1][prow];
-            col = pcol + 1;
-            row = prow;
-        }*/
-        // the previous click doesn't hit a ship. The computer will not click on clicked block
 
         Random random = new Random();
-        int choice = random.nextInt(6 - 0 + 1) + 0; // random number between 0 and 6
+        int choice = random.nextInt(5 - 0 + 1) + 0; // random number between 0 and 5
 
         if (choice == 0) { // the next computer click must be on a ship
             do {
-                //Random random = new Random();
                 col = random.nextInt(9 + 1 - 0) + 0;
                 row = random.nextInt(9 + 1 - 0) + 0;
                 r = theView1.getBoard()[col][row];
-            } while (r.getFill() == Paint.valueOf("BLACK") || r.getFill() == Paint.valueOf(
+            } while (r.getFill() == Paint.valueOf("DARKRED") || r.getFill() == Paint.valueOf(
                     "LIGHTGREY") || r.getFill() == Paint.valueOf("GREY"));
         }
-        else {
+        else { // the next computer click is random
             col = random.nextInt(9 + 1 - 0) + 0;
             row = random.nextInt(9 + 1 - 0) + 0;
             r = theView1.getBoard()[col][row];
@@ -293,18 +266,12 @@ public class Controller implements EventHandler<ActionEvent> {
 
         if (r.getFill() != Paint.valueOf("GREY") && r.getFill() != Paint.valueOf(
                 "LIGHTGREY")) {
-            r.setFill(Paint.valueOf("BLACK"));
-            //theView1.enemyHit = true;
+            r.setFill(Paint.valueOf("DARKRED"));
         }
         else {
-            //theView1.enemyHit = false;
             r.setFill(Paint.valueOf("LIGHTGREY"));
         }
 
-        int[] result = new int[2];
-        result[0] = col;
-        result[1] = row;
-        return result;
     }
 
     // clear the board where we set ship
@@ -355,11 +322,11 @@ public class Controller implements EventHandler<ActionEvent> {
         for (int i = 0; i < length; i++) {
             for (int j = 0; j < length; j++) {
                 if (this.theView1.getEnemyBoard()[i][j].getFill() == Paint.valueOf(
-                        "BLACK")) {
+                        "DARKRED")) {
                     count += 1;
                 }
                 if (this.theView1.getBoard()[i][j].getFill() == Paint.valueOf(
-                        "BLACK")) {
+                        "DARKRED")) {
                     enemyCount += 1;
                 }
             }

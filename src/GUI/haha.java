@@ -15,14 +15,13 @@
  */
 package GUI;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import javafx.application.Application;
 import javafx.stage.Stage;
-import sun.audio.AudioPlayer;
-import sun.audio.AudioStream;
 
 /**
  *
@@ -36,10 +35,10 @@ public class haha extends Application {
 
     @Override
     public void start(Stage primaryStage) throws FileNotFoundException, IOException {
-        InputStream in = new FileInputStream(
-                "/nfs/unixspace/linux/accounts/student/a/am049/csci205FinalProject/src/furrow.mp3");
-        AudioStream as = new AudioStream(in);
-        AudioPlayer.player.start(as);
+        InputStream in = new FileInputStream(new File("a.txt"));
+        //AudioStream as = new AudioStream(in);
+        //AudioPlayer.player.start(as);
+        //AudioPlayer.player.stop(as);
         /*final URL resource = getClass().getResource(
                 "/nfs/unixspace/linux/accounts/student/a/am049/csci205FinalProject/src/furrow.mp3");
         final Media media = new Media(resource.toString());

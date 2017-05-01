@@ -96,8 +96,6 @@ public class View {
     private KeyFrame keyFrame;
     private Duration duration;
 
-    public boolean hit = false, enemyHit = false;
-
     /**
      * Constructor for the View class.
      *
@@ -469,14 +467,6 @@ public class View {
 
     public Timeline getTimeline() {
         return timeline;
-    }
-
-    public boolean getHit() {
-        return hit;
-    }
-
-    public boolean getEnemyHit() {
-        return enemyHit;
     }
 
 }
