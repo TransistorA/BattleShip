@@ -147,27 +147,6 @@ public class View {
         opponentBoard = new GridPane();
         createEnemyBoard();
 
-//        // Add the buttons for rotating CW and CCW.
-//        bottomPane = new FlowPane(Orientation.HORIZONTAL);
-//        bottomPane.setAlignment(Pos.BASELINE_CENTER);
-//        rotateCWBtn = new Button("Rotate ship clockwise");
-//        rotateCCWBtn = new Button("Rotate ship counterclockwise");
-//
-//        // Add the images to the rotate buttons.
-//        Image cwImage = new Image(
-//                getClass().getResource("/GUI/cwbtn.png").toExternalForm());
-//        ImageView cwImageView = new ImageView(cwImage);
-//        rotateCWBtn.setGraphic(cwImageView);
-//        Image ccwImage = new Image(
-//                getClass().getResource("/GUI/ccwbtn.png").toExternalForm());
-//        ImageView ccwImageView = new ImageView(ccwImage);
-//        rotateCCWBtn.setGraphic(ccwImageView);
-//
-//        bottomPane.getChildren().add(new Label("Rotate ship: "));
-//        bottomPane.getChildren().add(rotateCWBtn);
-//        bottomPane.getChildren().add(rotateCCWBtn);
-//        bottomPane.setHgap(10);
-//        root.setBottom(bottomPane);
         // Create the buttons so the user can decide whether to place the ship
         // with horizontal or vertical orientation.
         shipHorizontal = new RadioButton("Horizontal");
@@ -191,15 +170,11 @@ public class View {
         shipSelectionDone = new Button("Confirm ship selection");
         shipSelectionDone.setFont(font);
 
+        // start game vs computer (without networking)
         startGame = new Button("Start Game vs Computer");
         startGame.setFont(font);
-        startGame.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                startGame();
-            }
-        });
 
+        // clear the board and restart the game
         clearBoards = new Button("Clear Boards");
         clearBoards.setOnAction(new EventHandler<ActionEvent>() {
             @Override
@@ -363,6 +338,7 @@ public class View {
         }
     }
 
+    // Show win or loss message when user or computer wins
     public void showWinOrLoss(String winOrLoss) {
         Alert alert = new Alert(AlertType.INFORMATION);
         alert.setTitle("Game Over");
@@ -380,6 +356,9 @@ public class View {
         alert.show();
     }
 
+    /**
+     * Clear the two boards and restart the game
+     */
     public void clearBoards() {
         int length = board.length;
         for (int i = 0; i < length; i++) {
@@ -395,10 +374,6 @@ public class View {
         cruiserBtn.setDisable(false);
         submarineBtn.setDisable(false);
         destroyerBtn.setDisable(false);
-    }
-
-    public void startGame() {
-
     }
 
     public BorderPane getRoot() {

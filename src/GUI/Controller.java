@@ -209,6 +209,10 @@ public class Controller implements EventHandler<ActionEvent> {
         // Check if the user wants to finish selecting their ships.
     }
 
+    /**
+     * Start the game. When user clicks on enemyBoard, computer clicks on
+     * userBoard and show red if hit, show white if miss
+     */
     public void startGame() {
         int length = this.theView1.getBoard().length;
         setEnemyBoard();
@@ -285,6 +289,11 @@ public class Controller implements EventHandler<ActionEvent> {
         }
     }
 
+    /**
+     * Set ships on enemyBoard, and then store the ship location and clear the
+     * board. The user will click on enemyBoard.
+     *
+     */
     public void setEnemyBoard() {
         int length = theView1.getBoard().length;
         board2 = new int[length][length];
@@ -316,6 +325,10 @@ public class Controller implements EventHandler<ActionEvent> {
         buildShip(2);
     }
 
+    /**
+     * When the number of blocks hit is 17 (5+4+3+3+2), the user or computer
+     * wins
+     */
     public void checkWin() {
         int length = this.theView1.getBoard().length;
         int count = 0, enemyCount = 0;
@@ -340,6 +353,11 @@ public class Controller implements EventHandler<ActionEvent> {
         }
     }
 
+    /**
+     * Create ship of specific size on enemyBoard.
+     *
+     * @param shipSize size of ship
+     */
     public void buildShip(int shipSize) {
         boolean set = false;
         while (set != true) {
