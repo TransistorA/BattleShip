@@ -67,7 +67,8 @@ public class Model {
     /**
      * Constructor for the Model class.
      *
-     * @author Joseph DiPalma, Ben Xu
+     * @author Joseph DiPalma
+     * @author Ben Xu
      */
     public Model(View p1View, View p2View, Player p1, Player p2) {
         this.carrier = new SimpleBooleanProperty(true);
@@ -127,6 +128,14 @@ public class Model {
         return p2View;
     }
 
+    /**
+     * Get the click location from the player.
+     *
+     * @author Joseph DiPalma
+     *
+     * @param player the player to get the click location from
+     * @return an ordered pair representing the click location
+     */
     public int[] getTargetLocation(int player) {
         // Player 1.
         if (player == 1) {
@@ -139,27 +148,64 @@ public class Model {
         }
     }
 
+    /**
+     * Starts the timer for a player.
+     *
+     * @author Joseph DiPalma
+     * @author Ben Xu
+     *
+     * @param p the player to start the timer for
+     */
     public void timerStart(Player p) {
         p.getMyView().getTimeline().play();
         p.getMyView().getTimer().start();
     }
 
+    /**
+     * Restarts the timer for a player.
+     *
+     * @author Joseph DiPalma
+     * @author Ben Xu
+     *
+     * @param p the player to restart the timer for
+     */
     public void timerRestart(Player p) {
         p.getMyView().getTimer().stop();
     }
 
+    /**
+     * Enable the attack button for a player.
+     *
+     * @author Joseph DiPalma
+     *
+     * @param p the player to enable the attack button for
+     */
     public void enableAttack(Player p) {
         // Get the view from the player.
         View pView = p.getMyView();
         pView.getAttackBtn().setDisable(false);
     }
 
+    /**
+     * Disable the attack button for a player.
+     *
+     * @author Joseph DiPalma
+     *
+     * @param p the player to disable the attack button for
+     */
     public void disableAttack(Player p) {
         // Get the view from the player.
         View pView = p.getMyView();
         pView.getAttackBtn().setDisable(true);
     }
 
+    /**
+     * Disable the ship selection buttons for a player.
+     *
+     * @author Joseph DiPalma
+     *
+     * @param p the player to disable the ship selection buttons for
+     */
     public void disableShipSelection(Player p) {
         // Get the view of the player.
         View pView = p.getMyView();
@@ -172,6 +218,13 @@ public class Model {
         pView.getCruiserBtn().setDisable(true);
     }
 
+    /**
+     * Finish initializing ships for a player.
+     *
+     * @author Joseph DiPalma
+     *
+     * @param p the player to finish initializing the ships for
+     */
     public void finishInitShip(Player p) {
         // Call the disableShipSelection method.
         disableShipSelection(p);
@@ -179,6 +232,13 @@ public class Model {
         p.shipsAddedTrue();
     }
 
+    /**
+     * Displays a victory message for the victorious player.
+     *
+     * @author Joseph DiPalma
+     *
+     * @param p the victorious player
+     */
     public void displayVictoryMsg(Player p) {
         // Get the player's view.
         View winView = p.getMyView();
@@ -187,6 +247,13 @@ public class Model {
         winView.showWinOrLoss("win");
     }
 
+    /**
+     * Displays a loss message for the losing player.
+     *
+     * @author Joseph DiPalma
+     *
+     * @param p the losing player
+     */
     public void displayDefeatMsg(Player p) {
         // Get the player's view.
         View loseView = p.getMyView();
@@ -199,6 +266,13 @@ public class Model {
 
     }
 
+    /**
+     * Attack the other player's ship and update the GUI.
+     *
+     * @author Joseph DiPalma
+     *
+     * @param player the other player who is being attacked
+     */
     public void attackShip(int player) {
         if (player == 1) {
 
@@ -253,7 +327,10 @@ public class Model {
     }
 
     /**
+     * Start the Battleship game.
      *
+     * @author Joseph DiPalma
+     * @author Ben Xu
      *
      * @see
      * <a href="http://stackoverflow.com/questions/8065532/how-to-randomly-pick-an-element-from-an-array">
@@ -266,19 +343,8 @@ public class Model {
         Random rand = new Random();
         int playerToGo = choice[rand.nextInt(choice.length)];
 
-        // Update both of the ships.
-        //updateShip(p1View, 1);
-        //updateShip(p2View, 2);
-        // End the ship initialization.
-        //finishInitShip(p1);
-        //finishInitShip(p2);
-        // Disable the ships.
-        //disableGUIControl(p1);
-        //disableGUIControl(p2);
         int i = playerToGo;
 
-//        this.p1View.getTimeline().play();
-//        this.p1View.getTimer().start();
         if (this.p1View.isP1InitDone() && this.p2View.isP2InitDone()) {
             System.out.println("Start game");
             while ((p1.didILose() == false) && (p2.didILose() == false)) {
@@ -352,11 +418,17 @@ public class Model {
                     timerRestart(p2);
                 }
             }
-
             i++;
         }
     }
 
+    /**
+     * Show the GUI for a player.
+     *
+     * @author Joseph DiPalma
+     *
+     * @param p the player to show the GUI for
+     */
     public void showGUI(Player p) {
         Stage primaryStage = new Stage();
 
@@ -365,11 +437,17 @@ public class Model {
         primaryStage.setTitle("Battleship");
         primaryStage.setScene(scene);
         primaryStage.sizeToScene();
-        // primaryStage.setFullScreen(true);
         primaryStage.setMaximized(true);
         primaryStage.show();
     }
 
+    /**
+     * Disable GUI control for a player.
+     *
+     * @author Joseph DiPalma
+     *
+     * @param p the player to disable the GUI control for
+     */
     public void disableGUIControl(Player p) {
         // Call the disableShipSelection method.
         disableShipSelection(p);
@@ -426,16 +504,6 @@ public class Model {
      * @param ship Ship object to build in the GUI
      */
     public void buildShipMy(Ship ship, Player player) {
-        // boolean invalid = false;
-
-//        // Make sure the user has selected an unoccupied location.
-//        for (int[] position : ship.getShipLoc()) {
-//            if (p1.getMyBoard().getBoard()[position[0]][position[1]] == 1) {
-//                invalid = true;
-//                break;
-//            }
-//        }
-        //      if (invalid == false) {
         boolean noAlert = true;
 
         for (int[] position : ship.getShipLoc()) {
@@ -456,7 +524,7 @@ public class Model {
             }
             else if (player.getMyView().board[position[0]][position[1]].getFill() != Paint.valueOf(
                     "GREY")) {
-                //System.out.println("case 2");
+                // System.out.println("case 2");
                 noAlert = false;
                 Alert alert = new Alert(
                         Alert.AlertType.ERROR);
@@ -467,12 +535,10 @@ public class Model {
                         "You cannot set ship here!");
                 alert.show();
                 return;
-                //System.out.println(alert.toString());
             }
         }
 
         //System.out.println("case 3");
-        //System.out.println(alert.toString());
         if (noAlert) {
             //System.out.println("case 3");
 
@@ -533,6 +599,9 @@ public class Model {
      * Update the ship when it is rotated or hit.
      *
      * @author Joseph DiPalma
+     *
+     * @param view the view to update the ship location
+     * @param player the player to update the view of
      */
     public void updateShip(View view, int player) {
 
@@ -559,11 +628,10 @@ public class Model {
                             p2Target[1] = row;
                         }
 
-                        System.out.println("p1 loc is: " + Arrays.toString(
-                                p1Target));
-                        System.out.println("p2 loc is: " + Arrays.toString(
-                                p2Target));
-
+//                        System.out.println("p1 loc is: " + Arrays.toString(
+//                                p1Target));
+//                        System.out.println("p2 loc is: " + Arrays.toString(
+//                                p2Target));
                         if (view.getShipHorizontal().isSelected()) {
                             if (view.getCarrierBtn().isSelected() && !(view.getCarrierBtn().isDisable())) {
                                 temp = new int[5][2];
@@ -667,22 +735,20 @@ public class Model {
                             alert.show();
                         }
                         try {
-                            System.out.println(
-                                    "carrier " + getAddedCarrier().get());
-                            System.out.println(
-                                    "cruiser " + getAddedCruiser().get());
-                            System.out.println(
-                                    "destroyer " + getAddedDestroyer().get());
-                            System.out.println(
-                                    "battleship " + getAddedBattleship().get());
-                            System.out.println(
-                                    "submarine " + getAddedSubmarine().get());
-
-                            //if ((!getAddedCarrier().get()) || (!getAddedCruiser().get()) || (!getAddedDestroyer().get()) || (!getAddedBattleship().get()) || (!getAddedSubmarine().get())) {
+//                            System.out.println(
+//                                    "carrier " + getAddedCarrier().get());
+//                            System.out.println(
+//                                    "cruiser " + getAddedCruiser().get());
+//                            System.out.println(
+//                                    "destroyer " + getAddedDestroyer().get());
+//                            System.out.println(
+//                                    "battleship " + getAddedBattleship().get());
+//                            System.out.println(
+//                                    "submarine " + getAddedSubmarine().get());
                             if ((!p1.getShipsAdded()) && (!p2.getShipsAdded())) {
-                                System.out.println("p1 " + p1.getShipsAdded());
-                                System.out.println("p2 " + p2.getShipsAdded());
-                                System.out.println("Working");
+//                                System.out.println("p1 " + p1.getShipsAdded());
+//                                System.out.println("p2 " + p2.getShipsAdded());
+//                                System.out.println("Working");
                                 if (player == 1) {
                                     Model.this.buildShipMy(ship, p1);
                                 }
@@ -701,14 +767,10 @@ public class Model {
                             alert.setContentText("Out of range!");
                             alert.show();
                         }
-
-                        //return loc;
                     }
                 });
             }
         }
-
-//
 //        System.out.println(Arrays.toString(loc));
 //        // Return the updated location.
 //        return loc;
@@ -730,6 +792,13 @@ public class Model {
         this.p2InitDone = p2InitDone;
     }
 
+    /**
+     * Check if both players are ready to start.
+     *
+     * @author Ben Xu
+     *
+     * @return true if both players are ready to start, false otherwise
+     */
     public boolean readyToStart() {
         if (p1InitDone == true && p2InitDone == true) {
             return true;

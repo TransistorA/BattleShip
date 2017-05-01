@@ -1,17 +1,17 @@
 /* *****************************************
-* CSCI205 - Software Engineering and Design
-* Spring 2017
-*
-* Name: Joseph DiPalma, Annan Miao, and Ben Xu
-* Date: Apr 26, 2017
-* Time: 10:22:52 AM
-*
-* Project: csci205finalproject
-* Package: networking
-* File: Server
-* Description:
-*
-* ****************************************
+ * CSCI205 - Software Engineering and Design
+ * Spring 2017
+ *
+ * Name: Joseph DiPalma, Annan Miao, and Ben Xu
+ * Date: Apr 26, 2017
+ * Time: 10:22:52 AM
+ *
+ * Project: csci205finalproject
+ * Package: networking
+ * File: Server
+ * Description:
+ *
+ * ****************************************
  */
 package networking;
 

@@ -35,7 +35,7 @@ public class Board {
      *
      * @author Ben Xu
      *
-     * @param size size of the square board
+     * @param size size of one side of the square board
      */
     public Board(int size) {
         this.size = size;
@@ -52,11 +52,11 @@ public class Board {
     }
 
     /**
-     * Update the board after an attack.
+     * Updates the board after an attack.
      *
      * @author Ben Xu
      *
-     * @param loc - array of size 2 representing an ordered pair of the attack
+     * @param loc array of size 2 representing an ordered pair of the attack
      * location
      */
     public void updateBoard(int[] loc) {
@@ -79,21 +79,4 @@ public class Board {
         }
         return strBoard;
     }
-
-//    public static void main(String[] argus) {
-//        Board testBoard = new Board(10);
-//        System.out.println(testBoard.toString());
-//        int[] loc = {1, 2};
-//        testBoard.updateBoard(loc);
-//        System.out.println(testBoard.toString());
-//
-//        Player p1 = new Player();
-//        Player p2 = new Player();
-//
-//        //ship loc
-//        int[] initLoc1 = {1, 2};
-//        int[] initLoc2 = {2, 2};
-//        int[] initLoc3 = {3, 2};
-//
-//    }
 }

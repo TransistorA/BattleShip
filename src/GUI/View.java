@@ -164,34 +164,13 @@ public class View {
         opponentBoard = new GridPane();
         createEnemyBoard();
 
-//        // Add the buttons for rotating CW and CCW.
-//        bottomPane = new FlowPane(Orientation.HORIZONTAL);
-//        bottomPane.setAlignment(Pos.BASELINE_CENTER);
-//        rotateCWBtn = new Button("Rotate ship clockwise");
-//        rotateCCWBtn = new Button("Rotate ship counterclockwise");
-//
-//        // Add the images to the rotate buttons.
-//        Image cwImage = new Image(
-//                getClass().getResource("/GUI/cwbtn.png").toExternalForm());
-//        ImageView cwImageView = new ImageView(cwImage);
-//        rotateCWBtn.setGraphic(cwImageView);
-//        Image ccwImage = new Image(
-//                getClass().getResource("/GUI/ccwbtn.png").toExternalForm());
-//        ImageView ccwImageView = new ImageView(ccwImage);
-//        rotateCCWBtn.setGraphic(ccwImageView);
-//
-//        bottomPane.getChildren().add(new Label("Rotate ship: "));
-//        bottomPane.getChildren().add(rotateCWBtn);
-//        bottomPane.getChildren().add(rotateCCWBtn);
-//        bottomPane.setHgap(10);
-//        root.setBottom(bottomPane);
-// Create the buttons so the user can decide whether to place the ship
-// with horizontal or vertical orientation.
+        // Create the buttons so the user can decide whether to place the ship
+        // with horizontal or vertical orientation.
         shipHorizontal = new RadioButton("Horizontal");
         shipVertical = new RadioButton("Vertical");
         shipHorizontal.setSelected(true);
 
-// Hold the orientation buttons in a toggle group.
+        // Hold the orientation buttons in a toggle group.
         orientationGroup = new ToggleGroup();
         shipHorizontal.setToggleGroup(orientationGroup);
         shipVertical.setToggleGroup(orientationGroup);
@@ -208,12 +187,9 @@ public class View {
         shipSelectionDone = new Button("Confirm ship selection");
         shipSelectionDone.setFont(font);
 
-//        timer = new Timer(60);
-//        timer.countDown();
-//        Label timeLbl = timer.getLabel();
+        // Create the timer for the player.
         timeline = new Timeline();
         timeline.setCycleCount(60);
-
         timerText = new Text(i.toString());
         timer = new AnimationTimer() {
             @Override
@@ -222,8 +198,7 @@ public class View {
                 i--;
             }
         };
-
-// When the timer reaches 0.
+        // When the timer reaches 0.
         onFinished = new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
@@ -233,30 +208,25 @@ public class View {
                 i = 60;
             }
         };
-
         duration = Duration.millis(60000);
         keyFrame = new KeyFrame(duration, onFinished);
-
         timeline.getKeyFrames().add(keyFrame);
 
-//     timeline.play();
-//   timer.start();
         bottomPane.getChildren().add(attackBtn);
         bottomPane.getChildren().add(shipSelectionDone);
         bottomPane.getChildren().add(timerText);
         bottomPane.setHgap(10);
-//bottomPane.getChildren().add(timer);
         root.setBottom(bottomPane);
 
-// Add the pane for the user to select the ship.
+        // Add the pane for the user to select the ship.
         rightPane = new FlowPane(Orientation.VERTICAL);
         rightPane.setAlignment(Pos.CENTER_RIGHT);
         rightPane.setVgap(10);
 
-// Create all of the labels and buttons related to the ships.
+        // Create all of the labels and buttons related to the ships.
         createShips();
 
-// Set the ship type.
+        // Set the ship type.
         carrierBtn.setUserData(new Ship(ShipType.CARRIER));
         battleshipBtn.setUserData(new Ship(ShipType.BATTLESHIP));
         cruiserBtn.setUserData(new Ship(ShipType.CRUISER));
@@ -270,17 +240,17 @@ public class View {
         rightPane.getChildren().add(submarineBtn);
         rightPane.getChildren().add(destroyerBtn);
 
-// Add the label for the orientation.
+        // Add the label for the orientation.
         rightPane.getChildren().add(new Label(
                 "Select the orientation of the ship:"));
 
-// Add the buttons to select horizontal or vertical ship orientation.
+        // Add the buttons to select horizontal or vertical ship orientation.
         rightPane.getChildren().add(shipHorizontal);
         rightPane.getChildren().add(shipVertical);
 
         root.setRight(rightPane);
 
-// Add both boards to the center pane.
+        // Add both boards to the center pane.
         grids.setAlignment(Pos.CENTER);
         grids.setMargin(opponentBoard, new Insets(5.0));
         grids.setMargin(myBoard, new Insets(5.0));
@@ -360,6 +330,14 @@ public class View {
         }
     }
 
+    /**
+     * Display a victory message for the victor or a loss message for the loser.
+     *
+     * @author Joseph DiPalma
+     *
+     * @param winOrLoss the string containing the message to display to the
+     * player
+     */
     public void showWinOrLoss(String winOrLoss) {
         Alert alert = new Alert(AlertType.INFORMATION);
         alert.setTitle("Game Over");
@@ -368,6 +346,11 @@ public class View {
         alert.show();
     }
 
+    /**
+     * Display an error message when the user has not added all of their ships.
+     *
+     * @author Joseph DiPalma
+     */
     public void showShipSelectionError() {
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setTitle("Ship Error");
@@ -437,6 +420,13 @@ public class View {
         return timeline;
     }
 
+    /**
+     * Checks if both players are ready to start.
+     *
+     * @author Ben Xu
+     *
+     * @return true if both players are ready to start, false otherwise
+     */
     public boolean readyToStart() {
         if (p1InitDone == true && p2InitDone == true) {
             return true;

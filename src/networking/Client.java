@@ -1,17 +1,17 @@
 /* *****************************************
-* CSCI205 - Software Engineering and Design
-* Spring 2017
-*
-* Name: Joseph DiPalma, Annan Miao, and Ben Xu
-* Date: Apr 26, 2017
-* Time: 10:27:19 AM
-*
-* Project: csci205finalproject
-* Package: networking
-* File: Client
-* Description:
-*
-* ****************************************
+ * CSCI205 - Software Engineering and Design
+ * Spring 2017
+ *
+ * Name: Joseph DiPalma, Annan Miao, and Ben Xu
+ * Date: Apr 26, 2017
+ * Time: 10:27:19 AM
+ *
+ * Project: csci205finalproject
+ * Package: networking
+ * File: Client
+ * Description:
+ *
+ * ****************************************
  */
 package networking;
 
@@ -28,8 +28,10 @@ import player.Player;
 import remote_interface.ServerTask;
 
 /**
+ * Client aspect of the network.
  *
- * @author computer
+ * @author Joseph DiPalma
+ * @author Ben Xu
  */
 public class Client {
 

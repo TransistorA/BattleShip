@@ -68,6 +68,8 @@ public class Player {
      * Constructor for the Player class.
      *
      * @author Ben Xu
+     *
+     * @param view view part of the MVC design pattern
      */
     public Player(View view) {
         this.initIndex = 0;
@@ -141,7 +143,7 @@ public class Player {
     }
 
     /**
-     * Update Board when the enemy attacks.
+     * Update the Board when the enemy attacks.
      *
      * @author Ben Xu
      *
@@ -203,9 +205,9 @@ public class Player {
     }
 
     /**
-     * check whether or not current player has lose yet
+     * Checks whether or not the current player has lost yet.
      *
-     * @return
+     * @return true if the player lost, false otherwise
      */
     public boolean didILose() {
         if (this.shipRemain == 0) {
@@ -219,6 +221,11 @@ public class Player {
         return myBoard;
     }
 
+    /**
+     * Determines if all of the ships have been added.
+     *
+     * @author Joseph DiPalma
+     */
     public void shipsAddedTrue() {
         this.shipsAdded = false;
         if (this.battleshipAdded && this.carrierAdded && this.cruiserAdded && this.destroyerAdded && this.submarineAdded) {

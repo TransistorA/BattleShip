@@ -15,6 +15,11 @@
  */
 package ship;
 
+/**
+ * Enumerated type representing the type of ship.
+ *
+ * @author Joseph DiPalma
+ */
 public enum ShipType {
     CARRIER(5, "PURPLE"), BATTLESHIP(4, "BLUE"), CRUISER(3, "GREEN"), SUBMARINE(
             3,

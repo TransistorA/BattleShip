@@ -1,17 +1,17 @@
 /* *****************************************
-* CSCI205 - Software Engineering and Design
-* Spring 2017
-*
-* Name: Joseph DiPalma, Annan Miao, and Ben Xu
-* Date: Apr 30, 2017
-* Time: 10:28:50 PM
-*
-* Project: csci205finalproject
-* Package: networking
-* File: ServerTask
-* Description:
-*
-* ****************************************
+ * CSCI205 - Software Engineering and Design
+ * Spring 2017
+ *
+ * Name: Joseph DiPalma, Annan Miao, and Ben Xu
+ * Date: Apr 30, 2017
+ * Time: 10:28:50 PM
+ *
+ * Project: csci205finalproject
+ * Package: networking
+ * File: ServerTask
+ * Description:
+ *
+ * ****************************************
  */
 package remote_interface;
 

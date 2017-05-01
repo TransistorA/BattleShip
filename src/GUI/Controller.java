@@ -38,37 +38,12 @@ public class Controller implements EventHandler<ActionEvent>, Task<Model>,
      * @author Joseph DiPalma
      *
      * @param theModel model part of the MVC design pattern
-     * @param theView view part of the MVC design pattern
      */
     public Controller(Model theModel) throws InterruptedException {
         this.theModel = theModel;
         this.theView1 = this.theModel.getP1View();
         this.theView2 = this.theModel.getP2View();
 
-//        Runnable checkIniTask;
-//        checkIniTask = new Runnable() {
-//            @Override
-//            public void run() {
-//
-//                while (true) {
-//                    if (Controller.this.theModel. == true && p2InitDone == true) {
-//                        theModel.startGame();
-//                        System.out.println("running?");
-//                        break;
-//
-//                    }
-//                }
-//            }
-//
-//        };
-        //taskThread.wait();
-        // This is all things that haven't been put in View yet but will be
-        // in the future.
-        /*
-        this.theView.getRotateCWButton().setOnAction(this);
-        this.theView.getRotateCCWButton().setOnAction(this);
-         */
-        // View 1.
         this.theModel.getCarrier().bind(
                 this.theView1.getCarrierBtn().selectedProperty());
         this.theModel.getBattleship().bind(
@@ -133,10 +108,6 @@ public class Controller implements EventHandler<ActionEvent>, Task<Model>,
             }
         });
 
-//        if (theModel.getP2View().getShipSelectionDone().isDisabled()) {
-//            //       if (theModel.getP2().getShipsAdded()) {
-//            theModel.startGame();
-//        }
         // View 2.
         this.theModel.getCarrier().bind(
                 this.theView2.getCarrierBtn().selectedProperty());
@@ -207,12 +178,6 @@ public class Controller implements EventHandler<ActionEvent>, Task<Model>,
 
             }
         });
-
-//        if (theModel.getP1View().getShipSelectionDone().isDisabled()) {
-//            //  if (theModel.getP1().getShipsAdded()) {
-//            //p1InitDone = true;
-//            theModel.startGame();
-//        }
     }
 
     /**
@@ -231,27 +196,6 @@ public class Controller implements EventHandler<ActionEvent>, Task<Model>,
     @Override
     public void handle(ActionEvent event) {
 
-        // This is all things that haven't been put in View yet but will be
-        // in the future.
-        /*
-        try {
-            if (event.getSource() == rotateCWButton) {
-                // Call the rotateCW method in Ship.
-            }
-
-            else if (event.getSource() == rotateCCWButton) {
-                // Call the rotateCCW method in Ship.
-            }
-        }
-        catch (RotationException ex) {
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("Rotation failed!");
-            alert.setHeaderText("Rotation failed!");
-            alert.setContentText("Cannot rotate the specified ship!");
-            alert.show();
-        }
-         */
-        // Check if the user wants to finish selecting their ships.
     }
 
     @Override
