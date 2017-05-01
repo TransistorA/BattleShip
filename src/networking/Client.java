@@ -52,8 +52,8 @@ public class Client {
             //s=new Socket("10.10.0.3,10");
             clientSocket = new Socket(serverIp, 1024);
             System.out.println(clientSocket);
-            input = (ObjectInputStream) clientSocket.getInputStream();
-            System.out.println(input.getClass());
+            input = new ObjectInputStream(clientSocket.getInputStream());
+            output = new ObjectOutputStream(clientSocket.getOutputStream());
             //din = new DataInputStream(clientSocket.getInputStream());
             //dout = new DataOutputStream(clientSocket.getOutputStream());
             //ClientChat();

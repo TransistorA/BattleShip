@@ -15,41 +15,37 @@
  */
 package networking;
 
+import GUI.Controller;
+import GUI.Model;
+import GUI.View;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.io.OutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.rmi.registry.LocateRegistry;
-import java.rmi.registry.Registry;
-import java.rmi.server.UnicastRemoteObject;
-import remote_interface.ServerTask;
-import remote_interface.Task;
+import javafx.application.Application;
+import player.Player;
 
 /**
  *
  * @author computer
  */
-public class Server implements ServerTask {
+public class Server {
 
     ServerSocket hostServer;
     Socket hostSocket;
     ObjectInputStream input;
     ObjectOutputStream output;
+    Controller control;
 
     public Server() {
-        super();
         try {
             System.out.println("Server Started");
             hostServer = new ServerSocket(1024);
             hostSocket = hostServer.accept();
             System.out.print("connected");
-            OutputStream output = hostSocket.getOutputStream();
-            //System.out.println(control);
-            output.close();
-            hostServer.close();
-            hostSocket.close();
+            output = new ObjectOutputStream(hostSocket.getOutputStream());
+            input = new ObjectInputStream(hostSocket.getInputStream());
         } catch (Exception e) {
             System.out.println(e);
         }
@@ -67,31 +63,47 @@ public class Server implements ServerTask {
         return hostSocket;
     }
 
-    public static void main(String[] args) {
-        //Scanner in = new Scanner(System.in);
-        //String t = in.nextLine();
-        //System.out.println(host.getHostSocket().isConnected());
+    private Controller initController() throws InterruptedException {
 
-        if (System.getSecurityManager() == null) {
-            System.setSecurityManager(new SecurityManager());
-        }
-        try {
-            String name = "server";
-            ServerTask host = new Server();
-            ServerTask stub = (ServerTask) UnicastRemoteObject.exportObject(host,
-                                                                            0);
-            Registry registry = LocateRegistry.getRegistry();
-            registry.rebind(name, stub);
-        } catch (Exception e) {
-            System.err.println("Server exception:");
-            e.printStackTrace();
-        }
-
+        View v1 = new View();
+        View v2 = new View();
+        Player p1 = new Player(v1);
+        Player p2 = new Player(v2);
+        Model model = new Model(v1, v2, p1, p2);
+        Controller control = new Controller(model);
+        return control;
     }
+//
+//    public static void main(String[] args) {
+//        //Scanner in = new Scanner(System.in);
+//        //String t = in.nextLine();
+//        //System.out.println(host.getHostSocket().isConnected());
+//
+//        if (System.getSecurityManager() == null) {
+//            System.setSecurityManager(new SecurityManager());
+//        }
+//        try {
+//            String name = "server";
+//            ServerTask host = new Server();
+//            ServerTask stub = (ServerTask) UnicastRemoteObject.exportObject(host,
+//                                                                            0);
+//            Registry registry = LocateRegistry.getRegistry();
+//            registry.rebind(name, stub);
+//        } catch (Exception e) {
+//            System.err.println("Server exception:");
+//            e.printStackTrace();
+//        }
+//
+//    }
+//
+//    @Override
+//    public <T> T executeTask(Task<T> t) {
+//        return t.execute();
+//    }
 
-    @Override
-    public <T> T executeTask(Task<T> t) {
-        return t.execute();
+    public static void main(String[] argus) {
+        Application.launch();
+        Server test = new Server();
     }
 
 }

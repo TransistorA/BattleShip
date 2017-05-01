@@ -259,4 +259,8 @@ public class Controller implements EventHandler<ActionEvent>, Task<Model>,
         return theModel;
     }
 
+    public Model getTheModel() {
+        return theModel;
+    }
+
 }
