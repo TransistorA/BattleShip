@@ -57,6 +57,8 @@ public class View {
     private BorderPane root;
 
     private GridPane grids;
+    private boolean p1InitDone;
+    private boolean p2InitDone;
 
     // The right pane for the ship selection.
     private FlowPane rightPane;
@@ -93,6 +95,23 @@ public class View {
     private EventHandler onFinished;
     private KeyFrame keyFrame;
     private Duration duration;
+
+    public boolean isP1InitDone() {
+        return p1InitDone;
+
+    }
+
+    public void setP1InitDone(boolean p1InitDone) {
+        this.p1InitDone = p1InitDone;
+    }
+
+    public boolean isP2InitDone() {
+        return p2InitDone;
+    }
+
+    public void setP2InitDone(boolean p2InitDone) {
+        this.p2InitDone = p2InitDone;
+    }
 
     /**
      * Constructor for the View class.
@@ -166,13 +185,13 @@ public class View {
 //        bottomPane.getChildren().add(rotateCCWBtn);
 //        bottomPane.setHgap(10);
 //        root.setBottom(bottomPane);
-        // Create the buttons so the user can decide whether to place the ship
-        // with horizontal or vertical orientation.
+// Create the buttons so the user can decide whether to place the ship
+// with horizontal or vertical orientation.
         shipHorizontal = new RadioButton("Horizontal");
         shipVertical = new RadioButton("Vertical");
         shipHorizontal.setSelected(true);
 
-        // Hold the orientation buttons in a toggle group.
+// Hold the orientation buttons in a toggle group.
         orientationGroup = new ToggleGroup();
         shipHorizontal.setToggleGroup(orientationGroup);
         shipVertical.setToggleGroup(orientationGroup);
@@ -204,7 +223,7 @@ public class View {
             }
         };
 
-        // When the timer reaches 0.
+// When the timer reaches 0.
         onFinished = new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
@@ -220,24 +239,24 @@ public class View {
 
         timeline.getKeyFrames().add(keyFrame);
 
-        //     timeline.play();
-        //   timer.start();
+//     timeline.play();
+//   timer.start();
         bottomPane.getChildren().add(attackBtn);
         bottomPane.getChildren().add(shipSelectionDone);
         bottomPane.getChildren().add(timerText);
         bottomPane.setHgap(10);
-        //bottomPane.getChildren().add(timer);
+//bottomPane.getChildren().add(timer);
         root.setBottom(bottomPane);
 
-        // Add the pane for the user to select the ship.
+// Add the pane for the user to select the ship.
         rightPane = new FlowPane(Orientation.VERTICAL);
         rightPane.setAlignment(Pos.CENTER_RIGHT);
         rightPane.setVgap(10);
 
-        // Create all of the labels and buttons related to the ships.
+// Create all of the labels and buttons related to the ships.
         createShips();
 
-        // Set the ship type.
+// Set the ship type.
         carrierBtn.setUserData(new Ship(ShipType.CARRIER));
         battleshipBtn.setUserData(new Ship(ShipType.BATTLESHIP));
         cruiserBtn.setUserData(new Ship(ShipType.CRUISER));
@@ -251,17 +270,17 @@ public class View {
         rightPane.getChildren().add(submarineBtn);
         rightPane.getChildren().add(destroyerBtn);
 
-        // Add the label for the orientation.
+// Add the label for the orientation.
         rightPane.getChildren().add(new Label(
                 "Select the orientation of the ship:"));
 
-        // Add the buttons to select horizontal or vertical ship orientation.
+// Add the buttons to select horizontal or vertical ship orientation.
         rightPane.getChildren().add(shipHorizontal);
         rightPane.getChildren().add(shipVertical);
 
         root.setRight(rightPane);
 
-        // Add both boards to the center pane.
+// Add both boards to the center pane.
         grids.setAlignment(Pos.CENTER);
         grids.setMargin(opponentBoard, new Insets(5.0));
         grids.setMargin(myBoard, new Insets(5.0));
@@ -270,7 +289,6 @@ public class View {
         grids.setPrefSize(1000, 1000);
 
         root.setCenter(grids);
-
     }
 
     /**
@@ -417,6 +435,13 @@ public class View {
 
     public Timeline getTimeline() {
         return timeline;
+    }
+
+    public boolean readyToStart() {
+        if (p1InitDone == true && p2InitDone == true) {
+            return true;
+        }
+        return false;
     }
 
 }

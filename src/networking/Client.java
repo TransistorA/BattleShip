@@ -22,7 +22,10 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
+import java.rmi.registry.LocateRegistry;
+import java.rmi.registry.Registry;
 import player.Player;
+import remote_interface.ServerTask;
 
 /**
  *
@@ -34,7 +37,7 @@ public class Client {
     private ObjectInputStream input = null;
     private ObjectOutputStream output = null;
 
-    private Controller initController() {
+    private Controller initController() throws InterruptedException {
         View v1 = new View();
         View v2 = new View();
         Player p1 = new Player(v1);
@@ -59,7 +62,7 @@ public class Client {
         }
     }
 
-    public void sendToServer() throws IOException {
+    public void sendToServer() throws IOException, InterruptedException {
         Controller control = initController();
         output = new ObjectOutputStream(clientSocket.getOutputStream());
         output.writeObject(control);
@@ -80,7 +83,22 @@ public class Client {
         return output;
     }
 
-    public static void main(String as[]) {
-        Client c = new Client("127.0.1.1");
+    public static void main(String[] args) {
+        //new Client();
+        if (System.getSecurityManager() == null) {
+            System.setSecurityManager(new SecurityManager());
+        }
+        try {
+            String name = "server";
+            Registry registry = LocateRegistry.getRegistry(args[0]);
+            ServerTask client = (ServerTask) registry.lookup(name);
+            Model theModel = new Model(new View(), new View(), new Player(
+                                       new View()), new Player(new View()));
+            Controller task = new Controller(theModel);
+            Model run = client.executeTask(task);
+        } catch (Exception e) {
+            System.err.println("Client exception:");
+            e.printStackTrace();
+        }
     }
 }

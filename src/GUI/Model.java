@@ -61,6 +61,9 @@ public class Model {
     private int[] p1Target = {-1, -1};
     private int[] p2Target = {-1, -1};
 
+    private boolean p1InitDone;
+    private boolean p2InitDone;
+
     /**
      * Constructor for the Model class.
      *
@@ -77,6 +80,9 @@ public class Model {
         this.p2View = p2View;
         this.p1 = p1;
         this.p2 = p2;
+
+        this.p1InitDone = false;
+        this.p2InitDone = false;
 
         this.addedCarrier = new SimpleBooleanProperty(false);
         this.addedBattleship = new SimpleBooleanProperty(false);
@@ -254,6 +260,7 @@ public class Model {
      * http://stackoverflow.com/questions/8065532/how-to-randomly-pick-an-element-from-an-array</a>
      */
     public void startGame() {
+
         // Make a random choice for the player.
         int[] choice = new int[]{0, 1};
         Random rand = new Random();
@@ -272,77 +279,82 @@ public class Model {
 
 //        this.p1View.getTimeline().play();
 //        this.p1View.getTimer().start();
-        while ((p1.didILose() == false) && (p2.didILose() == false)) {
-            System.out.println("i is: " + i);
+        if (this.p1View.isP1InitDone() && this.p2View.isP2InitDone()) {
+            System.out.println("Start game");
+            while ((p1.didILose() == false) && (p2.didILose() == false)) {
+                System.out.println("i is: " + i);
 
-            // Player 1's turn.
-            if (i % 2 == 0) {
-                // Start the timer.
-                timerStart(p1);
+                // Player 1's turn.
+                if (i % 2 == 0) {
+                    // Start the timer.
+                    timerStart(p1);
 
-                // Allow p1 to attack.
-                enableAttack(p1);
-                disableAttack(p2);
+                    // Allow p1 to attack.
+                    enableAttack(p1);
+                    disableAttack(p2);
 
-                int[] loc = getTargetLocation(1);
+                    int[] loc = getTargetLocation(1);
 
-                // Attack the given location.
-                p1.attack(loc, p2);
-                this.attackShip(2);
+                    // Attack the given location.
+                    p1.attack(loc, p2);
+                    this.attackShip(2);
 
-                // Defend the given location.
-                p2.defend(loc);
+                    // Defend the given location.
+                    p2.defend(loc);
 
-                // Display the message whether or not it hits.
-                displayTargetStatus();
+                    // Display the message whether or not it hits.
+                    displayTargetStatus();
 
-                // Disable the attack button for p1.
-                disableAttack(p1);
+                    // Disable the attack button for p1.
+                    disableAttack(p1);
 
-                // Check if p2 lost.
-                if (p2.didILose()) {
-                    displayVictoryMsg(p1);
-                    displayDefeatMsg(p2);
+                    // Check if p2 lost.
+                    if (p2.didILose()) {
+                        displayVictoryMsg(p1);
+                        displayDefeatMsg(p2);
+                        break;
+                    }
+
+                    timerRestart(p1);
                 }
 
-                timerRestart(p1);
-            }
+                // Player 2's turn.
+                else if (i % 2 == 1) {
+                    // Start the timer.
+                    timerStart(p2);
 
-            // Player 2's turn.
-            else if (i % 2 == 1) {
-                // Start the timer.
-                timerStart(p2);
+                    // Allow p2 to attack.
+                    enableAttack(p2);
+                    disableAttack(p1);
 
-                // Allow p2 to attack.
-                enableAttack(p2);
-                disableAttack(p1);
+                    int[] loc = getTargetLocation(2);
 
-                int[] loc = getTargetLocation(2);
+                    // Attack the given location.
+                    p2.attack(loc, p1);
+                    this.attackShip(2);
 
-                // Attack the given location.
-                p2.attack(loc, p1);
-                this.attackShip(2);
+                    // Defend the given location.
+                    p1.defend(loc);
 
-                // Defend the given location.
-                p1.defend(loc);
+                    // Display the message whether or not it hits.
+                    displayTargetStatus();
 
-                // Display the message whether or not it hits.
-                displayTargetStatus();
+                    // Disable the attack button for p2.
+                    disableAttack(p2);
 
-                // Disable the attack button for p2.
-                disableAttack(p2);
+                    // Check if p1 lost.
+                    if (p1.didILose()) {
+                        displayVictoryMsg(p2);
+                        displayDefeatMsg(p1);
+                        break;
+                    }
 
-                // Check if p1 lost.
-                if (p1.didILose()) {
-                    displayVictoryMsg(p2);
-                    displayDefeatMsg(p1);
+                    timerRestart(p2);
                 }
-
-                timerRestart(p2);
             }
+
+            i++;
         }
-
-        i++;
     }
 
     public void showGUI(Player p) {
@@ -700,6 +712,29 @@ public class Model {
 //        System.out.println(Arrays.toString(loc));
 //        // Return the updated location.
 //        return loc;
+    }
+
+    public boolean isP1InitDone() {
+        return p1InitDone;
+    }
+
+    public boolean isP2InitDone() {
+        return p2InitDone;
+    }
+
+    public void setP1InitDone(boolean p1InitDone) {
+        this.p1InitDone = p1InitDone;
+    }
+
+    public void setP2InitDone(boolean p2InitDone) {
+        this.p2InitDone = p2InitDone;
+    }
+
+    public boolean readyToStart() {
+        if (p1InitDone == true && p2InitDone == true) {
+            return true;
+        }
+        return false;
     }
 
 }

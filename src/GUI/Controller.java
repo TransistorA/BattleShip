@@ -15,15 +15,18 @@
  */
 package GUI;
 
+import java.io.Serializable;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import remote_interface.Task;
 
 /**
  * Controller part of the MVC design pattern.
  *
  * @author Joseph DiPalma
  */
-public class Controller implements EventHandler<ActionEvent> {
+public class Controller implements EventHandler<ActionEvent>, Task<Model>,
+                                   Serializable {
 
     private Model theModel;
     private View theView1;
@@ -37,11 +40,28 @@ public class Controller implements EventHandler<ActionEvent> {
      * @param theModel model part of the MVC design pattern
      * @param theView view part of the MVC design pattern
      */
-    public Controller(Model theModel) {
+    public Controller(Model theModel) throws InterruptedException {
         this.theModel = theModel;
         this.theView1 = this.theModel.getP1View();
         this.theView2 = this.theModel.getP2View();
 
+//        Runnable checkIniTask;
+//        checkIniTask = new Runnable() {
+//            @Override
+//            public void run() {
+//
+//                while (true) {
+//                    if (Controller.this.theModel. == true && p2InitDone == true) {
+//                        theModel.startGame();
+//                        System.out.println("running?");
+//                        break;
+//
+//                    }
+//                }
+//            }
+//
+//        };
+        //taskThread.wait();
         // This is all things that haven't been put in View yet but will be
         // in the future.
         /*
@@ -72,26 +92,35 @@ public class Controller implements EventHandler<ActionEvent> {
                 this.theView1.getDestroyerBtn().selectedProperty());
 
         // Check if the user is done selecting their ships.
-        this.theView1.getShipSelectionDone().setOnAction(
+        this.theModel.getP1View().getShipSelectionDone().setOnAction(
                 new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
                 try {
-                    theModel.getP1().shipsAddedTrue();
+                    Controller.this.theModel.getP1().shipsAddedTrue();
                     // Check if the user has added all of their ships.
-                    if (theModel.getP1().getShipsAdded()) {
-                        theModel.disableShipSelection(theModel.getP1());
+                    if (Controller.this.theModel.getP1().getShipsAdded()) {
+                        Controller.this.theModel.disableShipSelection(
+                                Controller.this.theModel.getP1());
 
                         theView1.getShipSelectionDone().setDisable(true);
 
                         theView1.getShipHorizontal().setDisable(true);
                         theView1.getShipVertical().setDisable(true);
 
+                        System.out.println("player 1 done");
+
                         // Check if the other user has added all of their ships.
-                        theModel.getP2().shipsAddedTrue();
-                        if (theModel.getP2().getShipsAdded()) {
-                            theModel.startGame();
-                        }
+                        Controller.this.theModel.getP1().shipsAddedTrue();
+                        Controller.this.theModel.getP2().shipsAddedTrue();
+
+                        System.out.println(
+                                "p1 ships added: " + Controller.this.theModel.isP1InitDone());
+                        System.out.println(
+                                "p2 ships added: " + Controller.this.theModel.isP2InitDone());
+                        Controller.this.theModel.setP1InitDone(true);
+                        theView1.setP1InitDone(true);
+                        Controller.this.theModel.startGame();
                     }
 
                     // The user has not added all of their ships.
@@ -104,6 +133,10 @@ public class Controller implements EventHandler<ActionEvent> {
             }
         });
 
+//        if (theModel.getP2View().getShipSelectionDone().isDisabled()) {
+//            //       if (theModel.getP2().getShipsAdded()) {
+//            theModel.startGame();
+//        }
         // View 2.
         this.theModel.getCarrier().bind(
                 this.theView2.getCarrierBtn().selectedProperty());
@@ -133,21 +166,35 @@ public class Controller implements EventHandler<ActionEvent> {
             @Override
             public void handle(ActionEvent event) {
                 try {
-                    theModel.getP2().shipsAddedTrue();
+                    Controller.this.theModel.getP2().shipsAddedTrue();
                     // Check if the user has added all of their ships.
-                    if (theModel.getP2().getShipsAdded()) {
-                        theModel.disableShipSelection(theModel.getP2());
+                    if (Controller.this.theModel.getP2().getShipsAdded()) {
+                        Controller.this.theModel.disableShipSelection(
+                                Controller.this.theModel.getP2());
 
                         theView2.getShipSelectionDone().setDisable(true);
 
                         theView2.getShipHorizontal().setDisable(true);
                         theView2.getShipVertical().setDisable(true);
 
+                        System.out.println("player 2 done");
+
                         // Check if the other user has added all of their ships.
-                        theModel.getP1().shipsAddedTrue();
-                        if (theModel.getP1().getShipsAdded()) {
-                            theModel.startGame();
-                        }
+                        Controller.this.theModel.getP1().shipsAddedTrue();
+                        Controller.this.theModel.getP2().shipsAddedTrue();
+                        theView2.setP2InitDone(true);
+                        System.out.println(
+                                "p1 ships added: " + Controller.this.theModel.isP1InitDone());
+                        System.out.println(
+                                "p2 ships added: " + Controller.this.theModel.isP2InitDone());
+                        System.out.println(
+                                "p1 ships added: " + theView2.isP2InitDone());
+                        System.out.println(
+                                "p2 ships added: " + theView1.isP1InitDone());
+                        Controller.this.theModel.setP2InitDone(true);
+
+                        Controller.this.theModel.startGame();
+
                     }
 
                     // The user has not added all of their ships.
@@ -157,8 +204,15 @@ public class Controller implements EventHandler<ActionEvent> {
                 } catch (Exception ex) {
                     theView2.showShipSelectionError();
                 }
+
             }
         });
+
+//        if (theModel.getP1View().getShipSelectionDone().isDisabled()) {
+//            //  if (theModel.getP1().getShipsAdded()) {
+//            //p1InitDone = true;
+//            theModel.startGame();
+//        }
     }
 
     /**
@@ -198,6 +252,11 @@ public class Controller implements EventHandler<ActionEvent> {
         }
          */
         // Check if the user wants to finish selecting their ships.
+    }
+
+    @Override
+    public Model execute() {
+        return theModel;
     }
 
 }
