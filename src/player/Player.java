@@ -74,8 +74,8 @@ public class Player {
         //init constants
         this.SHIP_CONFIG = new int[]{1, 1, 1, 1, 1};
         this.TOTAL_SHIPS = 5;
-        //this.shipRemain = 5;
-        this.shipRemain = 0;
+        this.shipRemain = 5;
+        //this.shipRemain = 0;
 
         // Add all of the ShipType types.
         this.TYPES = new ShipType[]{ShipType.CARRIER, ShipType.BATTLESHIP, ShipType.CRUISER, ShipType.SUBMARINE, ShipType.DESTROYER};

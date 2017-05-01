@@ -15,12 +15,19 @@
  */
 package networking;
 
+import GUI.Controller;
+import GUI.Model;
+import GUI.View;
 import java.io.BufferedReader;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.Socket;
+import java.rmi.registry.LocateRegistry;
+import java.rmi.registry.Registry;
+import player.Player;
+import remote_interface.ServerTask;
 
 /**
  *
@@ -60,7 +67,22 @@ public class Client {
         return clientSocket;
     }
 
-    public static void main(String as[]) {
+    public static void main(String[] args) {
         //new Client();
+        if (System.getSecurityManager() == null) {
+            System.setSecurityManager(new SecurityManager());
+        }
+        try {
+            String name = "server";
+            Registry registry = LocateRegistry.getRegistry(args[0]);
+            ServerTask client = (ServerTask) registry.lookup(name);
+            Model theModel = new Model(new View(), new View(), new Player(
+                                       new View()), new Player(new View()));
+            Controller task = new Controller(theModel);
+            Model run = client.executeTask(task);
+        } catch (Exception e) {
+            System.err.println("Client exception:");
+            e.printStackTrace();
+        }
     }
 }

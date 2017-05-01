@@ -18,11 +18,13 @@ package networking;
 import GUI.Controller;
 import GUI.Model;
 import GUI.View;
+import java.io.IOException;
 import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.UnknownHostException;
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
@@ -47,23 +49,59 @@ public class GameStartView extends Application {
     Server mainServer;
     Client mainClient;
     Scene scene;
-    Player p1;
-    Player p2;
     View theView1;
     View theView2;
+    Player p1;
+    Player p2;
     Model theModel;
     Controller theCtrl;
 
+    Thread initGame;
+
     @Override
     public void start(Stage primaryStage) throws Exception {
+        theView1 = new View();
+        theView2 = new View();
+        p1 = new Player(theView1);
+        p2 = new Player(theView2);
+        theModel = new Model(theView1, theView2, p1, p2);
+        theCtrl = new Controller(theModel);
         // Create the Player and View objects.
-        this.theView1 = new View();
-        this.theView2 = new View();
-        this.p1 = new Player(this.theView1);
-        this.p2 = new Player(this.theView2);
-        this.theModel = new Model(this.theView1, this.theView2, this.p1, this.p2);
-        this.theCtrl = new Controller(this.theModel);
 
+//        Runnable checkInitTask = new Runnable() {
+//            @Override
+//            public void run() {
+//                //System.out.println(theModel.readyToStart());
+//                while (true) {
+//                    //System.out.print(theView2.readyToStart());
+//                    //System.out.print(theView1.readyToStart() + "\n");
+//
+//                        theModel.startGame();
+//                    }
+//                }
+//            }
+//
+//        };
+//        System.out.println("first object is: " + firstObject);
+//        if (firstObject == 0) {
+//            System.out.println("first object");
+//
+//            this.theView1 = new View();
+//            this.theView2 = new View();
+//            this.p1 = new Player(
+//                    this.theView1);
+//            this.p2 = new Player(
+//                    this.theView2);
+//            this.theModel = new Model(
+//                    this.theView1,
+//                    this.theView2,
+//                    this.p1, this.p2);
+//
+//            this.theCtrl = new Controller(
+//                    this.theModel);
+//
+//            firstObject++;
+//        }
         VBox root = new VBox(5);
         root.setPrefWidth(500);
         root.setPadding(new Insets(10, 10, 10, 10));
@@ -129,18 +167,50 @@ public class GameStartView extends Application {
                 serverTask = new Runnable() {
                     @Override
                     public void run() {
+//                        GameStartView.this.theView1 = new View();
+//                        GameStartView.this.theView2 = new View();
+//                        GameStartView.this.p1 = new Player(
+//                                GameStartView.this.theView1);
+//                        GameStartView.this.p2 = new Player(
+//                                GameStartView.this.theView2);
+//                        GameStartView.this.theModel = new Model(
+//                                GameStartView.this.theView1,
+//                                GameStartView.this.theView2,
+//                                GameStartView.this.p1, GameStartView.this.p2);
+//                        try {
+//                            GameStartView.this.theCtrl = new Controller(
+//                                    GameStartView.this.theModel);
+//                        } catch (InterruptedException ex) {
+//                        }
                         mainServer = new Server();
-                    }
+                        if (mainServer.hostSocket.isConnected()) {
+                            System.out.println("CONNECTED!");
 
+                            try {
+                                mainServer.hostSocket.close();
+                            } catch (IOException ex) {
+
+                            }
+                            //run the model here
+                            //display View 1
+                            Platform.runLater(new Runnable() {
+                                @Override
+                                public void run() {
+                                    theModel.updateShip(
+                                            theView1, 1);
+                                    theModel.updateShip(
+                                            theView2, 2);
+                                    theModel.showGUI(
+                                            p1);
+                                }
+                            });
+                        }
+                    }
                 };
                 Thread ServerThread = new Thread(serverTask);
+
                 ServerThread.start();
-                if (mainServer.hostSocket.isConnected()) {
-                    System.out.println("CONNECTED!");
-                    //run the model here
-                    //display View 1
-                    theModel.showGUI(p1);
-                }
+
             }
         });
 
@@ -166,21 +236,36 @@ public class GameStartView extends Application {
                             @Override
                             public void run() {
                                 mainClient = new Client(ipInput.getText());
-                            }
+                                if (mainClient.getClientSocket().isConnected()) {
+                                    System.out.println("CONNECTED!");
 
+                                    try {
+                                        mainClient.clientSocket.close();
+                                    } catch (IOException ex) {
+
+                                    }
+
+                                    Platform.runLater(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            theModel.updateShip(
+                                                    theView1, 1);
+                                            theModel.updateShip(
+                                                    theView2, 2);
+                                            theModel.showGUI(
+                                                    p2);
+                                        }
+                                    });
+                                }
+                            }
                         };
                         Thread clientThread = new Thread(clientTask);
+
                         clientThread.start();
-
-                        if (mainClient.getClientSocket().isConnected()) {
-                            System.out.println("CONNECTED!");
-
-                            //model go here
-                            theModel.showGUI(p2);
-                        }
+//                        initGame = new Thread(checkInitTask);
+//                        initGame.start();
                     }
                 });
-
             }
         });
 

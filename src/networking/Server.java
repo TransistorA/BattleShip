@@ -18,12 +18,17 @@ package networking;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.rmi.registry.LocateRegistry;
+import java.rmi.registry.Registry;
+import java.rmi.server.UnicastRemoteObject;
+import remote_interface.ServerTask;
+import remote_interface.Task;
 
 /**
  *
  * @author computer
  */
-public class Server {
+public class Server implements ServerTask {
 
     ServerSocket hostServer;
     Socket hostSocket;
@@ -31,6 +36,7 @@ public class Server {
     //DataOutputStream dos;
 
     public Server() {
+        super();
         try {
             System.out.println("Server Started");
             hostServer = new ServerSocket(1024);
@@ -52,11 +58,31 @@ public class Server {
         return hostSocket;
     }
 
-    public static void main(String as[]) {
-        Server host = new Server();
+    public static void main(String[] args) {
         //Scanner in = new Scanner(System.in);
         //String t = in.nextLine();
         //System.out.println(host.getHostSocket().isConnected());
+
+        if (System.getSecurityManager() == null) {
+            System.setSecurityManager(new SecurityManager());
+        }
+        try {
+            String name = "server";
+            ServerTask host = new Server();
+            ServerTask stub = (ServerTask) UnicastRemoteObject.exportObject(host,
+                                                                            0);
+            Registry registry = LocateRegistry.getRegistry();
+            registry.rebind(name, stub);
+        } catch (Exception e) {
+            System.err.println("Server exception:");
+            e.printStackTrace();
+        }
+
+    }
+
+    @Override
+    public <T> T executeTask(Task<T> t) {
+        return t.execute();
     }
 
 }
