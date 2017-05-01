@@ -248,7 +248,7 @@ public class Controller implements EventHandler<ActionEvent> {
         int col, row;
 
         Random random = new Random();
-        int choice = random.nextInt(5 - 0 + 1) + 0; // random number between 0 and 5
+        int choice = random.nextInt(6 - 0 + 1) + 0; // random number between 0 and 6
 
         if (choice == 0) { // the next computer click must be on a ship
             do {
