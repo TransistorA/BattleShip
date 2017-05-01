@@ -85,6 +85,8 @@ public class View {
     // Set up the button for when the user is done selecting their ships.
     private Button shipSelectionDone;
 
+    private Button startGame, clearBoards;
+
     // Set up the timer for the player.
     private AnimationTimer timer;
     private Integer i = 60;
@@ -93,6 +95,8 @@ public class View {
     private EventHandler onFinished;
     private KeyFrame keyFrame;
     private Duration duration;
+
+    public boolean hit = false, enemyHit = false;
 
     /**
      * Constructor for the View class.
@@ -189,6 +193,23 @@ public class View {
         shipSelectionDone = new Button("Confirm ship selection");
         shipSelectionDone.setFont(font);
 
+        startGame = new Button("Start Game vs Computer");
+        startGame.setFont(font);
+        startGame.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                startGame();
+            }
+        });
+
+        clearBoards = new Button("Clear Boards");
+        clearBoards.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                clearBoards();
+            }
+        });
+
 //        timer = new Timer(60);
 //        timer.countDown();
 //        Label timeLbl = timer.getLabel();
@@ -225,6 +246,7 @@ public class View {
         bottomPane.getChildren().add(attackBtn);
         bottomPane.getChildren().add(shipSelectionDone);
         bottomPane.getChildren().add(timerText);
+        bottomPane.getChildren().add(startGame);
         bottomPane.setHgap(10);
         //bottomPane.getChildren().add(timer);
         root.setBottom(bottomPane);
@@ -258,6 +280,7 @@ public class View {
         // Add the buttons to select horizontal or vertical ship orientation.
         rightPane.getChildren().add(shipHorizontal);
         rightPane.getChildren().add(shipVertical);
+        rightPane.getChildren().add(clearBoards);
 
         root.setRight(rightPane);
 
@@ -359,6 +382,27 @@ public class View {
         alert.show();
     }
 
+    public void clearBoards() {
+        int length = board.length;
+        for (int i = 0; i < length; i++) {
+            for (int j = 0; j < length; j++) {
+                board[i][j].setFill(
+                        Paint.valueOf("GREY"));
+                enemyBoard[i][j].setFill(
+                        Paint.valueOf("GREY"));
+            }
+        }
+        carrierBtn.setDisable(false);
+        battleshipBtn.setDisable(false);
+        cruiserBtn.setDisable(false);
+        submarineBtn.setDisable(false);
+        destroyerBtn.setDisable(false);
+    }
+
+    public void startGame() {
+
+    }
+
     public BorderPane getRoot() {
         return root;
     }
@@ -395,12 +439,20 @@ public class View {
         return myBoard;
     }
 
+    public GridPane getOpponentBoard() {
+        return opponentBoard;
+    }
+
     public Button getAttackBtn() {
         return attackBtn;
     }
 
     public Button getShipSelectionDone() {
         return shipSelectionDone;
+    }
+
+    public Button getStartGame() {
+        return startGame;
     }
 
     public RadioButton getShipHorizontal() {
@@ -417,6 +469,14 @@ public class View {
 
     public Timeline getTimeline() {
         return timeline;
+    }
+
+    public boolean getHit() {
+        return hit;
+    }
+
+    public boolean getEnemyHit() {
+        return enemyHit;
     }
 
 }

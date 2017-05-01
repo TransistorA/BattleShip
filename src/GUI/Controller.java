@@ -15,8 +15,12 @@
  */
 package GUI;
 
+import java.util.Random;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.paint.Paint;
+import javafx.scene.shape.Rectangle;
 
 /**
  * Controller part of the MVC design pattern.
@@ -28,6 +32,10 @@ public class Controller implements EventHandler<ActionEvent> {
     private Model theModel;
     private View theView1;
     private View theView2;
+
+    private int[][] board2; // copy of the enemyBoard and differentiate ships with 0 and 1
+
+    private int[] location = {5, 5}; // previous click location of the computere
 
     /**
      * Constructor for the Controller class.
@@ -101,6 +109,14 @@ public class Controller implements EventHandler<ActionEvent> {
                 } catch (Exception ex) {
                     theView1.showShipSelectionError();
                 }
+            }
+        });
+
+        this.theView1.getStartGame().setOnAction(
+                new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                startGame();
             }
         });
 
@@ -200,4 +216,227 @@ public class Controller implements EventHandler<ActionEvent> {
         // Check if the user wants to finish selecting their ships.
     }
 
+    public void startGame() {
+        int length = this.theView1.getBoard().length;
+        setEnemyBoard();
+
+        for (int i = 0; i < length; i++) {
+            for (Rectangle r : this.theView1.getEnemyBoard()[i]) {
+                r.setOnMouseClicked(new EventHandler<MouseEvent>() {
+                    @Override
+                    public void handle(MouseEvent mouseevent) {
+                        int col = theView1.getOpponentBoard().getColumnIndex(r);
+                        int row = theView1.getOpponentBoard().getRowIndex(r);
+                        if (board2[col][row] == 1) {
+                            r.setFill(Paint.valueOf("BLACK")); // hit sound here
+                            location = click(location[0], location[1]);
+                            checkWin();
+                        }
+                        else {
+                            r.setFill(Paint.valueOf("LIGHTGREY"));
+                            location = click(location[0], location[1]);
+                            checkWin();
+                        }
+                    }
+                });
+            }
+        }
+    }
+
+    /**
+     * Use black for clicked ship, grey for unclicked area,lightgrey for clicked
+     * area other colors for unclicked ship
+     *
+     * @param pcol previous enemy click col
+     * @param prow previous enemy click row
+     * @return updated click location(col,row)
+     */
+    public int[] click(int pcol, int prow) {
+        Rectangle r;
+        int col, row;
+        int range = theView1.getBoard().length;
+        // the previous click hits a ship
+        /*if (theView1.getBoard()[pcol][prow].getFill() == Paint.valueOf("BLACK")) {
+            if (pcol == range - 1) {
+                r = theView1.getBoard()[pcol - 1][prow];
+                col = pcol - 1;
+                row = prow;
+            }
+            else if (prow == range - 1) {
+                r = theView1.getBoard()[pcol][prow - 1];
+                col = pcol;
+                row = prow - 1;
+            }
+            r = theView1.getBoard()[pcol + 1][prow];
+            col = pcol + 1;
+            row = prow;
+        }*/
+        // the previous click doesn't hit a ship. The computer will not click on clicked block
+
+        Random random = new Random();
+        int choice = random.nextInt(6 - 0 + 1) + 0; // random number between 0 and 6
+
+        if (choice == 0) { // the next computer click must be on a ship
+            do {
+                //Random random = new Random();
+                col = random.nextInt(9 + 1 - 0) + 0;
+                row = random.nextInt(9 + 1 - 0) + 0;
+                r = theView1.getBoard()[col][row];
+            } while (r.getFill() == Paint.valueOf("BLACK") || r.getFill() == Paint.valueOf(
+                    "LIGHTGREY") || r.getFill() == Paint.valueOf("GREY"));
+        }
+        else {
+            col = random.nextInt(9 + 1 - 0) + 0;
+            row = random.nextInt(9 + 1 - 0) + 0;
+            r = theView1.getBoard()[col][row];
+        }
+
+        if (r.getFill() != Paint.valueOf("GREY") && r.getFill() != Paint.valueOf(
+                "LIGHTGREY")) {
+            r.setFill(Paint.valueOf("BLACK"));
+            //theView1.enemyHit = true;
+        }
+        else {
+            //theView1.enemyHit = false;
+            r.setFill(Paint.valueOf("LIGHTGREY"));
+        }
+
+        int[] result = new int[2];
+        result[0] = col;
+        result[1] = row;
+        return result;
+    }
+
+    // clear the board where we set ship
+    public void clearBoard() {
+        int length = this.theView1.getBoard().length;
+        for (int i = 0; i < length; i++) {
+            for (int j = 0; j < length; j++) {
+                this.theView1.getEnemyBoard()[i][j].setFill(
+                        Paint.valueOf("GREY"));
+            }
+        }
+    }
+
+    public void setEnemyBoard() {
+        int length = theView1.getBoard().length;
+        board2 = new int[length][length];
+
+        placeShips();
+
+        for (int i = 0; i < length; i++) {
+            for (int j = 0; j < length; j++) {
+                if (this.theView1.getEnemyBoard()[i][j].getFill() != Paint.valueOf(
+                        "GREY")) {
+                    board2[i][j] = 1; // 1 represents ship area and 0 represents sea area
+                }
+                else {
+                    board2[i][j] = 0;
+                }
+            }
+        }
+        clearBoard();
+    }
+
+    /**
+     * Place 5 different ships on enemy board
+     */
+    public void placeShips() {
+        buildShip(5);
+        buildShip(4);
+        buildShip(3);
+        buildShip(3);
+        buildShip(2);
+    }
+
+    public void checkWin() {
+        int length = this.theView1.getBoard().length;
+        int count = 0, enemyCount = 0;
+        for (int i = 0; i < length; i++) {
+            for (int j = 0; j < length; j++) {
+                if (this.theView1.getEnemyBoard()[i][j].getFill() == Paint.valueOf(
+                        "BLACK")) {
+                    count += 1;
+                }
+                if (this.theView1.getBoard()[i][j].getFill() == Paint.valueOf(
+                        "BLACK")) {
+                    enemyCount += 1;
+                }
+            }
+        }
+        // the total number of ship area is 17
+        if (count == 17) {
+            theView1.showWinOrLoss("win");
+        }
+        if (enemyCount == 17) {
+            theView1.showWinOrLoss("lose");
+        }
+    }
+
+    public void buildShip(int shipSize) {
+        boolean set = false;
+        while (set != true) {
+            Random random = new Random();
+            int col = random.nextInt(9 + 1 - 0) + 0;
+            int row = random.nextInt(9 + 1 - 0) + 0;
+            if (col + shipSize > 9 && row + shipSize > 9) {
+                set = false;
+            }
+            else if (col + shipSize > 9 && row + shipSize <= 9 && checkOverlap(
+                    shipSize, col, row, 0) == true) {
+                for (int i = 0; i < shipSize; i++) {
+                    theView1.getEnemyBoard()[col][row + i].setFill(
+                            Paint.valueOf("RED"));
+                }
+                set = true;
+            }
+            else if (row + shipSize > 9 && col + shipSize <= 9 && checkOverlap(
+                    shipSize, col, row, 1) == true) {
+                for (int i = 0; i < shipSize; i++) {
+                    theView1.getEnemyBoard()[col + i][row].setFill(
+                            Paint.valueOf("RED"));
+                }
+                set = true;
+            }
+            else if (row + shipSize <= 9 && col + shipSize <= 9 && checkOverlap(
+                    shipSize, col, row, 1) == true) {
+                for (int i = 0; i < shipSize; i++) {
+                    theView1.getEnemyBoard()[col + i][row].setFill(
+                            Paint.valueOf("RED"));
+                }
+                set = true;
+            }
+
+        }
+    }
+
+    /**
+     * Check if the ship can be built at the location
+     *
+     * @param shipSize the ship size
+     * @param col the col index
+     * @param row the row index
+     * @param horizontal 1 if horizontal and 0 if vertical
+     * @return true if no overlap, false if overlap
+     */
+    public boolean checkOverlap(int shipSize, int col, int row, int horizontal) {
+        if (horizontal == 1) {
+            for (int i = 0; i < shipSize; i++) {
+                if (theView1.getEnemyBoard()[col + i][row].getFill() != Paint.valueOf(
+                        "GREY")) {
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        for (int i = 0; i < shipSize; i++) {
+            if (theView1.getEnemyBoard()[col][row + i].getFill() != Paint.valueOf(
+                    "GREY")) {
+                return false;
+            }
+        }
+        return true;
+
+    }
 }
