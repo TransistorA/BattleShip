@@ -7,15 +7,15 @@
  * Time: 10:18:20 AM
  *
  * Project: csci205finalproject
- * Package: player
+ * Package: player_AI
  * File: Player
  * Description:
  *
  * ****************************************
  */
-package player;
+package player_AI;
 
-import GUI.View;
+import GUI_AI.View;
 import board.Board;
 import java.util.ArrayList;
 import ship.Ship;

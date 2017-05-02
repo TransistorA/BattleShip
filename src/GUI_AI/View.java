@@ -7,13 +7,13 @@
  * Time: 10:16:41 AM
  *
  * Project: csci205finalproject
- * Package: GUI
+ * Package: GUI_AI
  * File: View
  * Description:
  *
  * ****************************************
  */
-package GUI;
+package GUI_AI;
 
 import javafx.animation.AnimationTimer;
 import javafx.animation.KeyFrame;
@@ -57,8 +57,6 @@ public class View {
     private BorderPane root;
 
     private GridPane grids;
-    private boolean p1InitDone;
-    private boolean p2InitDone;
 
     // The right pane for the ship selection.
     private FlowPane rightPane;
@@ -86,6 +84,8 @@ public class View {
 
     // Set up the button for when the user is done selecting their ships.
     private Button shipSelectionDone;
+
+    private Button startGame, clearBoards;
 
     // Set up the timer for the player.
     private AnimationTimer timer;
@@ -170,9 +170,22 @@ public class View {
         shipSelectionDone = new Button("Confirm ship selection");
         shipSelectionDone.setFont(font);
 
-        // Create the timer for the player.
+        // start game vs computer (without networking)
+        startGame = new Button("Start Game vs Computer");
+        startGame.setFont(font);
+
+        // clear the board and restart the game
+        clearBoards = new Button("Clear Boards");
+        clearBoards.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                clearBoards();
+            }
+        });
+
         timeline = new Timeline();
         timeline.setCycleCount(60);
+
         timerText = new Text(i.toString());
         timer = new AnimationTimer() {
             @Override
@@ -191,13 +204,16 @@ public class View {
                 i = 60;
             }
         };
+
         duration = Duration.millis(60000);
         keyFrame = new KeyFrame(duration, onFinished);
+
         timeline.getKeyFrames().add(keyFrame);
 
         bottomPane.getChildren().add(attackBtn);
         bottomPane.getChildren().add(shipSelectionDone);
         bottomPane.getChildren().add(timerText);
+        bottomPane.getChildren().add(startGame);
         bottomPane.setHgap(10);
         root.setBottom(bottomPane);
 
@@ -230,6 +246,7 @@ public class View {
         // Add the buttons to select horizontal or vertical ship orientation.
         rightPane.getChildren().add(shipHorizontal);
         rightPane.getChildren().add(shipVertical);
+        rightPane.getChildren().add(clearBoards);
 
         root.setRight(rightPane);
 
@@ -344,17 +361,25 @@ public class View {
     }
 
     /**
-     * Checks if both players are ready to start.
+     * Clear the two boards and restart the game.
      *
-     * @author Ben Xu
-     *
-     * @return true if both players are ready to start, false otherwise
+     * @author Annan Miao
      */
-    public boolean readyToStart() {
-        if (p1InitDone == true && p2InitDone == true) {
-            return true;
+    public void clearBoards() {
+        int length = board.length;
+        for (int i = 0; i < length; i++) {
+            for (int j = 0; j < length; j++) {
+                board[i][j].setFill(
+                        Paint.valueOf("GREY"));
+                enemyBoard[i][j].setFill(
+                        Paint.valueOf("GREY"));
+            }
         }
-        return false;
+        carrierBtn.setDisable(false);
+        battleshipBtn.setDisable(false);
+        cruiserBtn.setDisable(false);
+        submarineBtn.setDisable(false);
+        destroyerBtn.setDisable(false);
     }
 
     public BorderPane getRoot() {
@@ -393,12 +418,20 @@ public class View {
         return myBoard;
     }
 
+    public GridPane getOpponentBoard() {
+        return opponentBoard;
+    }
+
     public Button getAttackBtn() {
         return attackBtn;
     }
 
     public Button getShipSelectionDone() {
         return shipSelectionDone;
+    }
+
+    public Button getStartGame() {
+        return startGame;
     }
 
     public RadioButton getShipHorizontal() {
@@ -415,22 +448,5 @@ public class View {
 
     public Timeline getTimeline() {
         return timeline;
-    }
-
-    public boolean isP1InitDone() {
-        return p1InitDone;
-
-    }
-
-    public void setP1InitDone(boolean p1InitDone) {
-        this.p1InitDone = p1InitDone;
-    }
-
-    public boolean isP2InitDone() {
-        return p2InitDone;
-    }
-
-    public void setP2InitDone(boolean p2InitDone) {
-        this.p2InitDone = p2InitDone;
     }
 }

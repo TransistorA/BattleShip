@@ -13,7 +13,6 @@
  *
  * ****************************************
  */
-package networking;
 
 import GUI.Controller;
 import GUI.Model;

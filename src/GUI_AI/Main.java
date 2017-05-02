@@ -7,18 +7,18 @@
  * Time: 10:33:14 AM
  *
  * Project: csci205finalproject
- * Package: GUI
+ * Package: GUI_AI
  * File: Main
  * Description:
  *
  * ****************************************
  */
-package GUI;
+package GUI_AI;
 
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-import player.Player;
+import player_AI.Player;
 
 /**
  * Main method for the project.
@@ -61,7 +61,6 @@ public class Main extends Application {
         primaryStage.setTitle("Battleship");
         primaryStage.setScene(scene);
         primaryStage.sizeToScene();
-        // primaryStage.setFullScreen(true);
         primaryStage.setMaximized(true);
         primaryStage.show();
     }

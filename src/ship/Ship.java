@@ -61,6 +61,13 @@ public class Ship {
         this.numHits = 0;
     }
 
+    /**
+     * Constructor for the Ship class.
+     *
+     * @author Joseph DiPalma
+     *
+     * @param type the type of ship
+     */
     public Ship(ShipType type) {
         this.shipType = type;
         this.isSunk = false;
@@ -84,38 +91,10 @@ public class Ship {
                 break;
             }
         }
-
         // Check if the ship has been sunk.
         if (this.numHits == this.shipType.getSize()) {
             this.isSunk = true;
         }
-    }
-
-    /**
-     * Finds the status of the ship.
-     *
-     * @author Joseph DiPalma
-     *
-     * @return true if the ship is sunk, false otherwise
-     */
-    public boolean checkIfSunk() {
-        return isSunk;
-    }
-
-    public ShipType getShipType() {
-        return shipType;
-    }
-
-    public ArrayList<int[]> getShipLoc() {
-        return shipLoc;
-    }
-
-    public Orientation getOrientation() {
-        return orientation;
-    }
-
-    public void setOrientation(Orientation orientation) {
-        this.orientation = orientation;
     }
 
     /**
@@ -172,19 +151,14 @@ public class Ship {
                     tempLoc.set(j, tempPair);
                 }
             }
-
             // Change the orientation of the ship.
             this.orientation = Orientation.VERTICAL;
         }
-
         // The ship is vertical.
         else {
 
             // Loop over all of the values .
             for (int i = this.shipLoc.size() - 1; i >= 0; i--) {
-//                // Get the old y coordinate.
-//                int oldY = this.shipLoc.get(i)[1];
-
                 // Hold the new point.
                 int[] newLoc = {pivotX - i, pivotY};
 
@@ -213,7 +187,6 @@ public class Ship {
                     tempLoc.set(j, tempPair);
                 }
             }
-
             // Change the orientation of the ship.
             this.orientation = Orientation.HORIZONTAL;
         }
@@ -253,7 +226,6 @@ public class Ship {
                 // Add the new point to the ship location.
                 tempLoc.add(newLoc);
             }
-
             // Make sure I haven't gone past the bounds.
             // Check the last value to make sure I didn't go over the bounds.
             int[] lastPair = tempLoc.get(tempLoc.size() - 1);
@@ -275,11 +247,9 @@ public class Ship {
                     tempLoc.set(j, tempPair);
                 }
             }
-
             // Change the orientation of the ship.
             this.orientation = Orientation.VERTICAL;
         }
-
         // The ship is vertical.
         else {
             // Loop over all of the values except the pivot.
@@ -290,7 +260,6 @@ public class Ship {
                 // Add the new point to the ship location.
                 tempLoc.add(newLoc);
             }
-
             // Add the pivot to the location.
             tempLoc.add(pivot);
 
@@ -315,11 +284,9 @@ public class Ship {
                     tempLoc.set(j, tempPair);
                 }
             }
-
             // Change the orientation of the ship.
             this.orientation = Orientation.HORIZONTAL;
         }
-
         // Update the ship's position.
         this.shipLoc = tempLoc;
     }
@@ -335,6 +302,33 @@ public class Ship {
             int[] t = {startLoc[0] + 1, startLoc[1]};
             this.shipLoc.add(Arrays.copyOf(t, t.length));
         }
+    }
+
+    /**
+     * Finds the status of the ship.
+     *
+     * @author Joseph DiPalma
+     *
+     * @return true if the ship is sunk, false otherwise
+     */
+    public boolean checkIfSunk() {
+        return isSunk;
+    }
+
+    public ShipType getShipType() {
+        return shipType;
+    }
+
+    public ArrayList<int[]> getShipLoc() {
+        return shipLoc;
+    }
+
+    public Orientation getOrientation() {
+        return orientation;
+    }
+
+    public void setOrientation(Orientation orientation) {
+        this.orientation = orientation;
     }
 
     public boolean isIsSunk() {

@@ -15,18 +15,15 @@
  */
 package GUI;
 
-import java.io.Serializable;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
-import remote_interface.Task;
 
 /**
  * Controller part of the MVC design pattern.
  *
  * @author Joseph DiPalma
  */
-public class Controller implements EventHandler<ActionEvent>, Task<Model>,
-                                   Serializable {
+public class Controller implements EventHandler<ActionEvent> {
 
     private Model theModel;
     private View theView1;
@@ -39,7 +36,7 @@ public class Controller implements EventHandler<ActionEvent>, Task<Model>,
      *
      * @param theModel model part of the MVC design pattern
      */
-    public Controller(Model theModel) throws InterruptedException {
+    public Controller(Model theModel) {
         this.theModel = theModel;
         this.theView1 = this.theModel.getP1View();
         this.theView2 = this.theModel.getP2View();
@@ -83,16 +80,15 @@ public class Controller implements EventHandler<ActionEvent>, Task<Model>,
                         theView1.getShipHorizontal().setDisable(true);
                         theView1.getShipVertical().setDisable(true);
 
-                        System.out.println("player 1 done");
-
+//                        System.out.println("player 1 done");
                         // Check if the other user has added all of their ships.
                         Controller.this.theModel.getP1().shipsAddedTrue();
                         Controller.this.theModel.getP2().shipsAddedTrue();
 
-                        System.out.println(
-                                "p1 ships added: " + Controller.this.theModel.isP1InitDone());
-                        System.out.println(
-                                "p2 ships added: " + Controller.this.theModel.isP2InitDone());
+//                        System.out.println(
+//                                "p1 ships added: " + Controller.this.theModel.isP1InitDone());
+//                        System.out.println(
+//                                "p2 ships added: " + Controller.this.theModel.isP2InitDone());
                         Controller.this.theModel.setP1InitDone(true);
                         theView1.setP1InitDone(true);
                         Controller.this.theModel.startGame();
@@ -148,20 +144,19 @@ public class Controller implements EventHandler<ActionEvent>, Task<Model>,
                         theView2.getShipHorizontal().setDisable(true);
                         theView2.getShipVertical().setDisable(true);
 
-                        System.out.println("player 2 done");
-
+//                        System.out.println("player 2 done");
                         // Check if the other user has added all of their ships.
                         Controller.this.theModel.getP1().shipsAddedTrue();
                         Controller.this.theModel.getP2().shipsAddedTrue();
                         theView2.setP2InitDone(true);
-                        System.out.println(
-                                "p1 ships added: " + Controller.this.theModel.isP1InitDone());
-                        System.out.println(
-                                "p2 ships added: " + Controller.this.theModel.isP2InitDone());
-                        System.out.println(
-                                "p1 ships added: " + theView2.isP2InitDone());
-                        System.out.println(
-                                "p2 ships added: " + theView1.isP1InitDone());
+//                        System.out.println(
+//                                "p1 ships added: " + Controller.this.theModel.isP1InitDone());
+//                        System.out.println(
+//                                "p2 ships added: " + Controller.this.theModel.isP2InitDone());
+//                        System.out.println(
+//                                "p1 ships added: " + theView2.isP2InitDone());
+//                        System.out.println(
+//                                "p2 ships added: " + theView1.isP1InitDone());
                         Controller.this.theModel.setP2InitDone(true);
 
                         Controller.this.theModel.startGame();
@@ -196,11 +191,6 @@ public class Controller implements EventHandler<ActionEvent>, Task<Model>,
     @Override
     public void handle(ActionEvent event) {
 
-    }
-
-    @Override
-    public Model execute() {
-        return theModel;
     }
 
     public Model getTheModel() {

@@ -7,26 +7,24 @@
  * Time: 10:16:34 AM
  *
  * Project: csci205finalproject
- * Package: GUI
+ * Package: GUI_AI
  * File: Model
  * Description:
  *
  * ****************************************
  */
-package GUI;
+package GUI_AI;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Random;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.event.EventHandler;
-import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Rectangle;
-import javafx.stage.Stage;
-import player.Player;
+import player_AI.Player;
 import ship.Ship;
 import ship.ShipType;
 
@@ -61,19 +59,10 @@ public class Model {
     private int[] p1Target = {-1, -1};
     private int[] p2Target = {-1, -1};
 
-    private boolean p1InitDone;
-    private boolean p2InitDone;
-
     /**
      * Constructor for the Model class.
      *
-     * @author Joseph DiPalma
-     * @author Ben Xu
-     *
-     * @param p1View the View for Player 1
-     * @param p2View the View for Player 2
-     * @param p1 Player 1
-     * @param p2 Player 2
+     * @author Joseph DiPalma, Ben Xu
      */
     public Model(View p1View, View p2View, Player p1, Player p2) {
         this.carrier = new SimpleBooleanProperty(true);
@@ -87,9 +76,6 @@ public class Model {
         this.p1 = p1;
         this.p2 = p2;
 
-        this.p1InitDone = false;
-        this.p2InitDone = false;
-
         this.addedCarrier = new SimpleBooleanProperty(false);
         this.addedBattleship = new SimpleBooleanProperty(false);
         this.addedCruiser = new SimpleBooleanProperty(false);
@@ -98,29 +84,9 @@ public class Model {
     }
 
     /**
-     * Get the click location from the player.
+     * Start the timer for the specified player.
      *
      * @author Joseph DiPalma
-     *
-     * @param player the player to get the click location from
-     * @return an ordered pair representing the click location
-     */
-    public int[] getTargetLocation(int player) {
-        // Player 1.
-        if (player == 1) {
-            return this.p1Target;
-        }
-        // Player 2.
-        else {
-            return this.p2Target;
-        }
-    }
-
-    /**
-     * Starts the timer for a player.
-     *
-     * @author Joseph DiPalma
-     * @author Ben Xu
      *
      * @param p the player to start the timer for
      */
@@ -130,10 +96,9 @@ public class Model {
     }
 
     /**
-     * Restarts the timer for a player.
+     * Restart the timer for the specified player.
      *
      * @author Joseph DiPalma
-     * @author Ben Xu
      *
      * @param p the player to restart the timer for
      */
@@ -142,7 +107,7 @@ public class Model {
     }
 
     /**
-     * Enable the attack button for a player.
+     * Enable the attack button for the specified player.
      *
      * @author Joseph DiPalma
      *
@@ -155,7 +120,7 @@ public class Model {
     }
 
     /**
-     * Disable the attack button for a player.
+     * Disable the attack button for the specified player.
      *
      * @author Joseph DiPalma
      *
@@ -168,7 +133,7 @@ public class Model {
     }
 
     /**
-     * Disable the ship selection buttons for a player.
+     * Disable the ship selection buttons for the specified player.
      *
      * @author Joseph DiPalma
      *
@@ -187,7 +152,7 @@ public class Model {
     }
 
     /**
-     * Finish initializing ships for a player.
+     * Finish initializing the ships for the specified player.
      *
      * @author Joseph DiPalma
      *
@@ -201,11 +166,11 @@ public class Model {
     }
 
     /**
-     * Displays a victory message for the victorious player.
+     * Display a victory message for the victorious player.
      *
      * @author Joseph DiPalma
      *
-     * @param p the victorious player
+     * @param p the player to display the victory message for
      */
     public void displayVictoryMsg(Player p) {
         // Get the player's view.
@@ -216,11 +181,11 @@ public class Model {
     }
 
     /**
-     * Displays a loss message for the losing player.
+     * Display a loss message for the losing player.
      *
      * @author Joseph DiPalma
      *
-     * @param p the losing player
+     * @param p the player to display the loss message to
      */
     public void displayDefeatMsg(Player p) {
         // Get the player's view.
@@ -231,11 +196,20 @@ public class Model {
     }
 
     /**
-     * Attack the other player's ship and update the GUI.
+     * Display to the user whether they hit or missed the opponent's ship.
+     *
+     * @author Joseph DiPalma
+     */
+    public void displayTargetStatus() {
+
+    }
+
+    /**
+     * Attack the ship of the player.
      *
      * @author Joseph DiPalma
      *
-     * @param player the other player who is being attacked
+     * @param player the player to attack the ship of
      */
     public void attackShip(int player) {
         if (player == 1) {
@@ -291,118 +265,123 @@ public class Model {
     }
 
     /**
-     * Start the Battleship game.
+     * Start the game for both players.
      *
      * @author Joseph DiPalma
-     * @author Ben Xu
      *
      * @see
      * <a href="http://stackoverflow.com/questions/8065532/how-to-randomly-pick-an-element-from-an-array">
      * http://stackoverflow.com/questions/8065532/how-to-randomly-pick-an-element-from-an-array</a>
      */
     public void startGame() {
-
         // Make a random choice for the player.
         int[] choice = new int[]{0, 1};
         Random rand = new Random();
         int playerToGo = choice[rand.nextInt(choice.length)];
 
+        // Update both of the ships.
+        //updateShip(p1View, 1);
+        //updateShip(p2View, 2);
+        // End the ship initialization.
+        //finishInitShip(p1);
+        //finishInitShip(p2);
+        // Disable the ships.
+        //disableGUIControl(p1);
+        //disableGUIControl(p2);
         int i = playerToGo;
 
-        if (this.p1View.isP1InitDone() && this.p2View.isP2InitDone()) {
-            System.out.println("Start game");
-            while ((p1.didILose() == false) && (p2.didILose() == false)) {
-                System.out.println("i is: " + i);
+//        this.p1View.getTimeline().play();
+//        this.p1View.getTimer().start();
+        while ((p1.didILose() == false) && (p2.didILose() == false)) {
+            System.out.println("i is: " + i);
 
-                // Player 1's turn.
-                if (i % 2 == 0) {
-                    // Start the timer.
-                    timerStart(p1);
+            // Player 1's turn.
+            if (i % 2 == 0) {
+                // Start the timer.
+                timerStart(p1);
 
-                    // Allow p1 to attack.
-                    enableAttack(p1);
-                    disableAttack(p2);
+                // Allow p1 to attack.
+                enableAttack(p1);
+                disableAttack(p2);
 
-                    int[] loc = getTargetLocation(1);
+                int[] loc = getTargetLocation(1);
 
-                    // Attack the given location.
-                    p1.attack(loc, p2);
-                    this.attackShip(2);
+                // Attack the given location.
+                p1.attack(loc, p2);
+                this.attackShip(2);
 
-                    // Defend the given location.
-                    p2.defend(loc);
+                // Defend the given location.
+                p2.defend(loc);
 
-                    // Disable the attack button for p1.
-                    disableAttack(p1);
+                // Display the message whether or not it hits.
+                displayTargetStatus();
 
-                    // Check if p2 lost.
-                    if (p2.didILose()) {
-                        displayVictoryMsg(p1);
-                        displayDefeatMsg(p2);
-                        break;
-                    }
-                    timerRestart(p1);
+                // Disable the attack button for p1.
+                disableAttack(p1);
+
+                // Check if p2 lost.
+                if (p2.didILose()) {
+                    displayVictoryMsg(p1);
+                    displayDefeatMsg(p2);
                 }
 
-                // Player 2's turn.
-                else if (i % 2 == 1) {
-                    // Start the timer.
-                    timerStart(p2);
-
-                    // Allow p2 to attack.
-                    enableAttack(p2);
-                    disableAttack(p1);
-
-                    int[] loc = getTargetLocation(2);
-
-                    // Attack the given location.
-                    p2.attack(loc, p1);
-                    this.attackShip(2);
-
-                    // Defend the given location.
-                    p1.defend(loc);
-
-                    // Disable the attack button for p2.
-                    disableAttack(p2);
-
-                    // Check if p1 lost.
-                    if (p1.didILose()) {
-                        displayVictoryMsg(p2);
-                        displayDefeatMsg(p1);
-                        break;
-                    }
-                    timerRestart(p2);
-                }
+                timerRestart(p1);
             }
-            i++;
+
+            // Player 2's turn.
+            else if (i % 2 == 1) {
+                // Start the timer.
+                timerStart(p2);
+
+                // Allow p2 to attack.
+                enableAttack(p2);
+                disableAttack(p1);
+
+                int[] loc = getTargetLocation(2);
+
+                // Attack the given location.
+                p2.attack(loc, p1);
+                this.attackShip(2);
+
+                // Defend the given location.
+                p1.defend(loc);
+
+                // Display the message whether or not it hits.
+                displayTargetStatus();
+
+                // Disable the attack button for p2.
+                disableAttack(p2);
+
+                // Check if p1 lost.
+                if (p1.didILose()) {
+                    displayVictoryMsg(p2);
+                    displayDefeatMsg(p1);
+                }
+
+                timerRestart(p2);
+            }
         }
+
+        i++;
     }
 
     /**
-     * Show the GUI for a player.
+     * Show the GUI for the specified player.
      *
      * @author Joseph DiPalma
      *
      * @param p the player to show the GUI for
      */
     public void showGUI(Player p) {
-        Stage primaryStage = new Stage();
 
-        Scene scene = new Scene(p.getMyView().getRoot(), 1500, 1500);
-
-        primaryStage.setTitle("Battleship");
-        primaryStage.setScene(scene);
-        primaryStage.sizeToScene();
-        primaryStage.setMaximized(true);
-        primaryStage.show();
     }
 
     /**
-     * Disable GUI control for a player.
+     * Disable the GUI for the specified player.
      *
      * @author Joseph DiPalma
      *
-     * @param p the player to disable the GUI control for
+     * @param p the player to disable the GUI for
      */
     public void disableGUIControl(Player p) {
         // Call the disableShipSelection method.
@@ -440,7 +419,7 @@ public class Model {
             }
             else if (player.getMyView().board[position[0]][position[1]].getFill() != Paint.valueOf(
                     "GREY")) {
-                // System.out.println("case 2");
+                //System.out.println("case 2");
                 noAlert = false;
                 Alert alert = new Alert(
                         Alert.AlertType.ERROR);
@@ -451,10 +430,12 @@ public class Model {
                         "You cannot set ship here!");
                 alert.show();
                 return;
+                //System.out.println(alert.toString());
             }
         }
 
         //System.out.println("case 3");
+        //System.out.println(alert.toString());
         if (noAlert) {
             //System.out.println("case 3");
 
@@ -507,6 +488,7 @@ public class Model {
                         break;
                 }
             }
+
         }
     }
 
@@ -515,10 +497,12 @@ public class Model {
      *
      * @author Joseph DiPalma
      *
-     * @param view the view to update the ship location
-     * @param player the player to update the view of
+     * @param view the view to update the ship in
+     * @param player the player to update the ship for
      */
     public void updateShip(View view, int player) {
+
+        //System.out.println("run update ship");
         // Create or rotate ship, or destroy ship when clicking on ship area
         for (int i = 0; i < view.board.length; i++) {
             for (Rectangle r : view.board[i]) {
@@ -527,6 +511,7 @@ public class Model {
                     public void handle(MouseEvent mouseevent) {
                         int col = view.myBoard.getColumnIndex(r);
                         int row = view.myBoard.getRowIndex(r);
+                        //System.out.println(col + " " + row);
 
                         int[][] temp = null;
 
@@ -540,10 +525,11 @@ public class Model {
                             p2Target[1] = row;
                         }
 
-//                        System.out.println("p1 loc is: " + Arrays.toString(
-//                                p1Target));
-//                        System.out.println("p2 loc is: " + Arrays.toString(
-//                                p2Target));
+                        System.out.println("p1 loc is: " + Arrays.toString(
+                                p1Target));
+                        System.out.println("p2 loc is: " + Arrays.toString(
+                                p2Target));
+
                         if (view.getShipHorizontal().isSelected()) {
                             if (view.getCarrierBtn().isSelected() && !(view.getCarrierBtn().isDisable())) {
                                 temp = new int[5][2];
@@ -647,20 +633,22 @@ public class Model {
                             alert.show();
                         }
                         try {
-//                            System.out.println(
-//                                    "carrier " + getAddedCarrier().get());
-//                            System.out.println(
-//                                    "cruiser " + getAddedCruiser().get());
-//                            System.out.println(
-//                                    "destroyer " + getAddedDestroyer().get());
-//                            System.out.println(
-//                                    "battleship " + getAddedBattleship().get());
-//                            System.out.println(
-//                                    "submarine " + getAddedSubmarine().get());
+                            System.out.println(
+                                    "carrier " + getAddedCarrier().get());
+                            System.out.println(
+                                    "cruiser " + getAddedCruiser().get());
+                            System.out.println(
+                                    "destroyer " + getAddedDestroyer().get());
+                            System.out.println(
+                                    "battleship " + getAddedBattleship().get());
+                            System.out.println(
+                                    "submarine " + getAddedSubmarine().get());
+
+                            //if ((!getAddedCarrier().get()) || (!getAddedCruiser().get()) || (!getAddedDestroyer().get()) || (!getAddedBattleship().get()) || (!getAddedSubmarine().get())) {
                             if ((!p1.getShipsAdded()) && (!p2.getShipsAdded())) {
-//                                System.out.println("p1 " + p1.getShipsAdded());
-//                                System.out.println("p2 " + p2.getShipsAdded());
-//                                System.out.println("Working");
+                                System.out.println("p1 " + p1.getShipsAdded());
+                                System.out.println("p2 " + p2.getShipsAdded());
+                                System.out.println("Working");
                                 if (player == 1) {
                                     Model.this.buildShipMy(ship, p1);
                                 }
@@ -679,27 +667,37 @@ public class Model {
                             alert.setContentText("Out of range!");
                             alert.show();
                         }
+
+                        //return loc;
                     }
                 });
             }
         }
+
+//
 //        System.out.println(Arrays.toString(loc));
 //        // Return the updated location.
 //        return loc;
     }
 
-    /**
-     * Check if both players are ready to start.
-     *
-     * @author Ben Xu
-     *
-     * @return true if both players are ready to start, false otherwise
-     */
-    public boolean readyToStart() {
-        if (p1InitDone == true && p2InitDone == true) {
-            return true;
-        }
-        return false;
+    public void setAddedCarrier(SimpleBooleanProperty addedCarrier) {
+        this.addedCarrier = addedCarrier;
+    }
+
+    public void setAddedBattleship(SimpleBooleanProperty addedBattleship) {
+        this.addedBattleship = addedBattleship;
+    }
+
+    public void setAddedCruiser(SimpleBooleanProperty addedCruiser) {
+        this.addedCruiser = addedCruiser;
+    }
+
+    public void setAddedSubmarine(SimpleBooleanProperty addedSubmarine) {
+        this.addedSubmarine = addedSubmarine;
+    }
+
+    public void setAddedDestroyer(SimpleBooleanProperty addedDestroyer) {
+        this.addedDestroyer = addedDestroyer;
     }
 
     public SimpleBooleanProperty getCarrier() {
@@ -738,14 +736,6 @@ public class Model {
         return p2View;
     }
 
-    public boolean isP1InitDone() {
-        return p1InitDone;
-    }
-
-    public boolean isP2InitDone() {
-        return p2InitDone;
-    }
-
     public SimpleBooleanProperty getAddedCarrier() {
         return addedCarrier;
     }
@@ -766,32 +756,16 @@ public class Model {
         return addedDestroyer;
     }
 
-    public void setP1InitDone(boolean p1InitDone) {
-        this.p1InitDone = p1InitDone;
-    }
+    public int[] getTargetLocation(int player) {
+        // Player 1.
+        if (player == 1) {
+            return this.p1Target;
+        }
 
-    public void setP2InitDone(boolean p2InitDone) {
-        this.p2InitDone = p2InitDone;
-    }
-
-    public void setAddedCarrier(SimpleBooleanProperty addedCarrier) {
-        this.addedCarrier = addedCarrier;
-    }
-
-    public void setAddedBattleship(SimpleBooleanProperty addedBattleship) {
-        this.addedBattleship = addedBattleship;
-    }
-
-    public void setAddedCruiser(SimpleBooleanProperty addedCruiser) {
-        this.addedCruiser = addedCruiser;
-    }
-
-    public void setAddedSubmarine(SimpleBooleanProperty addedSubmarine) {
-        this.addedSubmarine = addedSubmarine;
-    }
-
-    public void setAddedDestroyer(SimpleBooleanProperty addedDestroyer) {
-        this.addedDestroyer = addedDestroyer;
+        // Player 2.
+        else {
+            return this.p2Target;
+        }
     }
 
 }

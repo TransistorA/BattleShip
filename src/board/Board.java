@@ -47,10 +47,6 @@ public class Board {
         }
     }
 
-    public int[][] getBoard() {
-        return board;
-    }
-
     /**
      * Updates the board after an attack.
      *
@@ -78,5 +74,9 @@ public class Board {
             strBoard += Arrays.toString(this.board[row]) + "\n";
         }
         return strBoard;
+    }
+
+    public int[][] getBoard() {
+        return board;
     }
 }
